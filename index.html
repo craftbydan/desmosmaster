@@ -1,296 +1,667 @@
-<meta charset="UTF-8">
-<title>Desmos Drill</title>
-<style>
-  :root{
-    --bg:#212226;
-    --bg-elevated:#26282c;
-    --surface:#2c2e31;
-    --surface-2:#323437;
-    --border:#3a3d42;
-    --border-strong:#4a4d53;
-    --text:#d1d0c5;
-    --text-dim:#646669;
-    --text-faint:#4a4c50;
-    --accent:#e2b714;
-    --accent-strong:#f5d354;
-    --accent-dim:rgba(226,183,20,0.14);
-    --warn:#e2b714;
-    --warn-dim:rgba(226,183,20,0.14);
-    --danger:#ca4754;
-    --danger-dim:rgba(202,71,84,0.14);
-    --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
-    --sans: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
-    --math: "STIX Two Text", "Cambria Math", Cambria, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
-  }
-  :root[data-theme="light"]{
-    --bg:#e5e5e0;
-    --bg-elevated:#eeeee9;
-    --surface:#f7f7f2;
-    --surface-2:#ffffff;
-    --border:#d6d6cf;
-    --border-strong:#c1c1b7;
-    --text:#232323;
-    --text-dim:#8b8b83;
-    --text-faint:#aeaea5;
-    --accent:#b8860b;
-    --accent-strong:#8f6a08;
-    --accent-dim:rgba(184,134,11,0.12);
-    --warn:#b8860b;
-    --warn-dim:rgba(184,134,11,0.12);
-    --danger:#c0392b;
-    --danger-dim:rgba(192,57,43,0.10);
-  }
-  @media (prefers-color-scheme: light){
-    :root:not([data-theme="dark"]){
-      --bg:#e5e5e0;
-      --bg-elevated:#eeeee9;
-      --surface:#f7f7f2;
-      --surface-2:#ffffff;
-      --border:#d6d6cf;
-      --border-strong:#c1c1b7;
-      --text:#232323;
-      --text-dim:#8b8b83;
-      --text-faint:#aeaea5;
-      --accent:#b8860b;
-      --accent-strong:#8f6a08;
-      --accent-dim:rgba(184,134,11,0.12);
-      --warn:#b8860b;
-      --warn-dim:rgba(184,134,11,0.12);
-      --danger:#c0392b;
-      --danger-dim:rgba(192,57,43,0.10);
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desmos Master & SAT Math Desmos | Keystroke & Prep Trainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=STIX+Two+Text:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #121316;
+      --bg-elevated: #18191d;
+      --surface: #202227;
+      --surface-2: #282a30;
+      --surface-3: #343742;
+      --border: #3b3e49;
+      --border-strong: #565a68;
+      --text: #e6e6e0;
+      --text-dim: #a0a6b0;
+      --text-faint: #6c7280;
+      --accent: #e2b714;
+      --accent-strong: #f5d354;
+      --accent-dim: rgba(226, 183, 20, 0.16);
+      --sat-accent: #3b82f6;
+      --sat-accent-strong: #60a5fa;
+      --sat-accent-dim: rgba(59, 130, 246, 0.16);
+      --warn: #f59e0b;
+      --warn-dim: rgba(245, 158, 11, 0.16);
+      --danger: #ef4444;
+      --danger-dim: rgba(239, 68, 68, 0.16);
+      --success: #10b981;
+      --success-dim: rgba(16, 185, 129, 0.16);
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --sans: "Inter", -apple-system, system-ui, sans-serif;
+      --heading: "Outfit", var(--sans);
+      --math: "STIX Two Text", "Cambria Math", Georgia, serif;
     }
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--sans);
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
-  #root{max-width:1120px;margin:0 auto;padding:40px 32px 100px;}
 
-  /* ---------- top bar ---------- */
-  .topbar{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:32px;gap:12px;flex-wrap:wrap;}
-  .brand{display:flex;align-items:baseline;gap:12px;}
-  .brand-mark{font-family:var(--mono);font-weight:700;font-size:clamp(22px,2.4vw,30px);letter-spacing:-0.02em;}
-  .brand-mark .dot{color:var(--accent);}
-  .brand-sub{font-size:14px;color:var(--text-faint);letter-spacing:.02em;}
-  .topbar-actions{display:flex;gap:8px;}
-  .icon-btn{
-    background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
-    border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer;font-family:var(--sans);
-  }
-  .icon-btn:hover{color:var(--text);border-color:var(--border-strong);}
-  .icon-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+    :root[data-theme="light"] {
+      --bg: #e8e8e3;
+      --bg-elevated: #f0f0eb;
+      --surface: #f8f8f4;
+      --surface-2: #ffffff;
+      --surface-3: #deded6;
+      --border: #d4d4cc;
+      --border-strong: #b4b4a8;
+      --text: #1a1a1a;
+      --text-dim: #62625a;
+      --text-faint: #929288;
+      --accent: #b8860b;
+      --accent-strong: #8f6a08;
+      --accent-dim: rgba(184, 134, 11, 0.14);
+      --sat-accent: #2563eb;
+      --sat-accent-strong: #1d4ed8;
+      --sat-accent-dim: rgba(37, 99, 235, 0.14);
+      --warn: #d97706;
+      --warn-dim: rgba(217, 119, 6, 0.14);
+      --danger: #dc2626;
+      --danger-dim: rgba(220, 38, 38, 0.14);
+      --success: #059669;
+      --success-dim: rgba(5, 150, 105, 0.14);
+    }
 
-  /* ---------- tips panel ---------- */
-  .tips{
-    background:var(--surface);border:1px solid var(--border);border-radius:14px;
-    padding:20px 24px;margin-bottom:28px;
-  }
-  .tips summary{cursor:pointer;font-size:15px;font-weight:600;color:var(--text-dim);list-style:none;display:flex;align-items:center;gap:10px;}
-  .tips summary::-webkit-details-marker{display:none;}
-  .tips summary::before{content:"⌨";color:var(--accent);font-size:15px;}
-  .tips summary .chev{margin-left:auto;color:var(--text-faint);font-size:13px;transition:transform .15s;}
-  .tips[open] summary .chev{transform:rotate(90deg);}
-  .tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px;}
-  .tip-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 15px;}
-  .tip-card .tip-key{font-family:var(--mono);font-size:14px;color:var(--accent);margin-bottom:5px;}
-  .tip-card .tip-body{font-size:14px;color:var(--text-dim);line-height:1.5;}
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100vh; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* ---------- category grid ---------- */
-  .section-label{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);margin:0 0 14px 2px;font-weight:600;}
-  .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:8px;}
-  .cat-card{
-    background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 22px 20px;
-    display:flex;flex-direction:column;gap:12px;cursor:pointer;text-align:left;font-family:var(--sans);color:var(--text);
-    transition:border-color .15s, transform .1s;
-  }
-  .cat-card:hover{border-color:var(--border-strong);}
-  .cat-card:active{transform:scale(0.995);}
-  .cat-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-  .cat-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .cat-name{font-weight:650;font-size:18px;letter-spacing:-0.01em;}
-  .phase-pill{
-    font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-    padding:4px 10px;border-radius:100px;border:1px solid transparent;white-space:nowrap;
-  }
-  .phase-pill.learn{background:var(--accent-dim);color:var(--accent-strong);}
-  .phase-pill.practice{background:var(--warn-dim);color:var(--warn);}
-  .phase-pill.blitz{background:var(--danger-dim);color:var(--danger);}
-  .phase-pill.mastered{background:var(--surface-2);color:var(--text-dim);border-color:var(--border-strong);}
-  .cat-desc{font-size:14.5px;color:var(--text-dim);line-height:1.45;}
-  .cat-meta{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-faint);font-family:var(--mono);}
-  .cat-bar{height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:2px;}
-  .cat-bar-fill{height:100%;background:var(--accent);border-radius:3px;}
-  .cat-card.is-mastered .cat-bar-fill{background:var(--text-faint);}
+    #root {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
 
-  /* ---------- session screen ---------- */
-  .session{display:flex;flex-direction:column;align-items:center;gap:26px;}
-  .session-head{width:100%;max-width:720px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  .session-cat{font-size:15px;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
-  .session-back{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:15px;padding:4px 2px;font-family:var(--sans);}
-  .session-back:hover{color:var(--text);}
-  .streak-badge{
-    font-family:var(--mono);font-size:15px;color:var(--text-dim);display:flex;gap:16px;align-items:center;
-  }
-  .streak-badge b{color:var(--text);font-weight:700;}
-  .streak-badge .flame{color:var(--warn);}
+    /* ---------- Header & Topbar ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: clamp(24px, 2.5vw, 32px);
+      letter-spacing: -0.03em;
+    }
+    .brand-mark .dot { color: var(--accent); }
+    .brand-sub {
+      font-size: 13px;
+      color: var(--text-faint);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-  .progress-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:620px;}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--border-strong);}
-  .dot.done-ok{background:var(--accent);}
-  .dot.done-bad{background:var(--danger);}
-  .dot.current{background:var(--text);transform:scale(1.3);}
+    .icon-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--sans);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .icon-btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+    }
+    .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-  .timer-wrap{width:100%;max-width:620px;}
-  .timer-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:14px;color:var(--text-faint);margin-bottom:7px;}
-  .timer-track{height:7px;border-radius:4px;background:var(--surface-2);overflow:hidden;}
-  .timer-fill{height:100%;width:100%;background:var(--accent);border-radius:4px;transition:width .1s linear, background-color .2s;}
-  .timer-fill.warn{background:var(--warn);}
-  .timer-fill.danger{background:var(--danger);animation:pulse 0.6s ease-in-out infinite;}
-  @media (prefers-reduced-motion: reduce){ .timer-fill.danger{animation:none;} }
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+    /* ---------- Mode Switcher Tabs ---------- */
+    .part-switcher {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 28px;
+      gap: 4px;
+    }
+    .part-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px 18px;
+      font-family: var(--heading);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-dim);
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .part-tab:hover { color: var(--text); }
+    .part-tab.active {
+      background: var(--surface-2);
+      color: var(--text);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: 1px solid var(--border-strong);
+    }
+    .part-tab.active[data-part="sat"] {
+      border-color: var(--sat-accent);
+      color: var(--sat-accent-strong);
+    }
+    .part-tab .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 100px;
+      background: var(--surface-3);
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-weight: 600;
+    }
+    .part-tab.active[data-part="sat"] .badge {
+      background: var(--sat-accent-dim);
+      color: var(--sat-accent);
+    }
 
-  .card{
-    width:100%;max-width:760px;background:var(--surface);border:1px solid var(--border);
-    border-radius:20px;padding:56px 48px 40px;display:flex;flex-direction:column;align-items:center;gap:30px;
-    transition:border-color .2s;
-  }
-  .card.state-correct{border-color:var(--accent);}
-  .card.state-wrong{border-color:var(--danger);}
+    /* ---------- Tips Panel ---------- */
+    .tips {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+    }
+    .tips summary {
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dim);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tips summary::-webkit-details-marker { display: none; }
+    .tips summary::before { content: "⌨"; color: var(--accent); font-size: 16px; }
+    .tips summary .chev { margin-left: auto; color: var(--text-faint); font-size: 13px; transition: transform .15s; }
+    .tips[open] summary .chev { transform: rotate(90deg); }
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .tip-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .tip-card .tip-key { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 4px; font-weight: 600; }
+    .tip-card .tip-body { font-size: 13px; color: var(--text-dim); line-height: 1.45; }
 
-  .phase-tag{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--text-faint);font-weight:700;display:flex;align-items:center;gap:10px;}
-  .diff-pill{font-size:12px;letter-spacing:.06em;padding:3px 10px;border-radius:100px;border:1px solid var(--border-strong);}
-  .diff-pill.easy{color:var(--text-dim);}
-  .diff-pill.medium{color:var(--warn);border-color:transparent;background:var(--warn-dim);}
-  .diff-pill.hard{color:var(--danger);border-color:transparent;background:var(--danger-dim);}
-  .prompt{font-family:var(--math);font-size:clamp(42px,6.2vw,68px);font-weight:500;color:var(--text);text-align:center;line-height:1.3;user-select:none;min-height:1.4em;display:flex;align-items:center;justify-content:center;}
+    /* ---------- Category Grid ---------- */
+    .section-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-faint);
+      margin: 0 0 14px 2px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .cat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--sans);
+      color: var(--text);
+      transition: all 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .cat-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .cat-card:active { transform: scale(0.99); }
+    .cat-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    
+    .cat-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .cat-name { font-family: var(--heading); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+    .phase-pill {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .phase-pill.learn { background: var(--accent-dim); color: var(--accent-strong); }
+    .phase-pill.practice { background: var(--warn-dim); color: var(--warn); }
+    .phase-pill.blitz { background: var(--danger-dim); color: var(--danger); }
+    .phase-pill.mastered { background: var(--success-dim); color: var(--success); border-color: transparent; }
 
-  .answer-shown{
-    font-family:var(--mono);font-size:19px;color:var(--accent-strong);background:var(--accent-dim);
-    border:1px solid transparent;border-radius:10px;padding:10px 18px;letter-spacing:.01em;
-  }
+    .cat-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.45; flex: 1; }
+    .cat-meta { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-faint); font-family: var(--mono); }
+    .cat-bar { height: 6px; border-radius: 4px; background: var(--surface-2); overflow: hidden; margin-top: 4px; }
+    .cat-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s ease; }
+    .cat-card[data-part="sat"] .cat-bar-fill { background: var(--sat-accent); }
+    .cat-card.is-mastered .cat-bar-fill { background: var(--success); }
 
-  .breakdown{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;max-width:660px;}
-  .tok{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-    background:var(--surface-2);border:1.5px solid var(--border);border-radius:10px;
-    padding:10px 13px 8px;min-width:32px;transition:border-color .15s, background-color .15s, opacity .2s;
-  }
-  .tok-char{font-family:var(--mono);font-size:20px;color:var(--text);white-space:pre;}
-  .tok-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-faint);white-space:nowrap;}
-  .tok-arrow{color:var(--text-faint);font-size:16px;align-self:center;opacity:.5;}
-  .tok.is-active{border-color:var(--accent);background:var(--accent-dim);}
-  .tok.is-active .tok-char{color:var(--accent-strong);font-weight:700;}
-  .tok.is-active .tok-label{color:var(--accent);}
-  .tok.is-done{opacity:.32;}
-  .tok-fn .tok-char{color:var(--accent-strong);}
+    /* ---------- Session Screen ---------- */
+    .session { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+    .session-head { width: 100%; max-width: 780px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .session-cat { font-size: 15px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; font-weight: 500; }
+    .session-back { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 14px; padding: 4px 2px; font-family: var(--sans); font-weight: 500; }
+    .session-back:hover { color: var(--text); }
 
-  .key-legend{
-    display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:center;max-width:620px;
-  }
-  .key-legend-title{
-    font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-faint);margin-right:2px;
-  }
-  .legend-chip{
-    display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);
-    border-radius:8px;padding:5px 12px;
-  }
-  .legend-chip b{font-family:var(--mono);color:var(--text);font-size:16px;font-weight:600;}
-  .legend-chip i{font-style:normal;font-size:11.5px;color:var(--text-faint);white-space:nowrap;}
+    .streak-badge {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--text-dim);
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+    .streak-badge b { color: var(--text); font-weight: 700; }
+    .streak-badge .flame { color: var(--warn); }
 
-  .type-stage{width:100%;display:flex;flex-direction:column;gap:16px;align-items:center;cursor:text;position:relative;}
-  .type-input{
-    position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;border:none;padding:0;margin:0;
-  }
+    .progress-dots { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: 680px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border-strong); transition: all 0.2s; }
+    .dot.done-ok { background: var(--success); }
+    .dot.done-bad { background: var(--danger); }
+    .dot.current { background: var(--text); transform: scale(1.35); box-shadow: 0 0 8px rgba(255,255,255,0.4); }
 
-  .typed-preview{
-    font-family:var(--math);font-size:clamp(28px,4.2vw,36px);font-weight:500;min-height:1.3em;text-align:center;
-    color:var(--accent-strong);letter-spacing:.01em;display:flex;align-items:center;justify-content:center;
-    flex-wrap:wrap;opacity:.9;
-  }
-  .typed-preview.is-empty{opacity:.35;}
+    .timer-wrap { width: 100%; max-width: 780px; }
+    .timer-row { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 13px; color: var(--text-faint); margin-bottom: 6px; }
+    .timer-track { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--border); }
+    .timer-fill { height: 100%; width: 100%; background: var(--accent); border-radius: 4px; transition: background-color 0.2s; }
+    .timer-fill.warn { background: var(--warn); }
+    .timer-fill.danger { background: var(--danger); animation: pulse 0.6s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.5;} }
 
-  .word-line{
-    font-family:var(--mono);font-size:clamp(28px,4.4vw,38px);min-height:1.5em;text-align:center;letter-spacing:.02em;
-    display:flex;justify-content:center;flex-wrap:wrap;font-weight:500;
-  }
-  .diff-ch{white-space:pre;}
-  .diff-ok{color:var(--text);}
-  .diff-bad{color:var(--danger);text-decoration:underline;text-decoration-color:var(--danger);text-underline-offset:3px;}
-  .diff-rest{color:var(--text-faint);white-space:pre;}
-  .diff-placeholder{color:var(--text-faint);font-style:normal;font-size:20px;}
-  .caret{
-    display:inline-block;width:3px;background:var(--accent);margin-left:2px;
-    animation:caret-blink 1s step-end infinite;
-  }
-  @media (prefers-reduced-motion: reduce){ .caret{animation:none;} }
-  @keyframes caret-blink{0%,100%{opacity:1;}50%{opacity:0;}}
-  .word-line.wrong-flash{animation:shake .28s ease;}
-  @media (prefers-reduced-motion: reduce){ .word-line.wrong-flash{animation:none;} }
-  @keyframes shake{
-    0%,100%{transform:translateX(0);}
-    25%{transform:translateX(-6px);}
-    75%{transform:translateX(6px);}
-  }
+    .card {
+      width: 100%;
+      max-width: 780px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 36px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+    }
+    .card.state-correct { border-color: var(--success); box-shadow: 0 0 24px rgba(16, 185, 129, 0.2); }
+    .card.state-wrong { border-color: var(--danger); box-shadow: 0 0 24px rgba(239, 68, 68, 0.2); }
 
-  .note-box{
-    max-width:600px;background:var(--warn-dim);border:1px solid transparent;border-radius:10px;
-    padding:12px 17px;font-size:14.5px;color:var(--warn);line-height:1.5;text-align:center;
-  }
-  .note-box b{font-family:var(--mono);}
+    .phase-tag {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--text-faint);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .diff-pill { font-size: 11px; letter-spacing: .06em; padding: 2px 8px; border-radius: 100px; border: 1px solid var(--border-strong); }
+    .diff-pill.easy { color: var(--text-dim); }
+    .diff-pill.medium { color: var(--warn); border-color: transparent; background: var(--warn-dim); }
+    .diff-pill.hard { color: var(--danger); border-color: transparent; background: var(--danger-dim); }
 
-  .card-actions{display:flex;gap:12px;}
-  .btn{
-    font-family:var(--sans);font-size:15px;font-weight:600;border-radius:10px;padding:11px 22px;cursor:pointer;
-    border:1px solid var(--border-strong);background:var(--surface-2);color:var(--text-dim);
-  }
-  .btn:hover{color:var(--text);}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-  .btn-reveal{color:var(--danger);border-color:transparent;background:var(--danger-dim);}
-  .btn-primary{background:var(--accent);color:#08130f;border-color:transparent;}
-  .btn-primary:hover{background:var(--accent-strong);color:#08130f;}
+    .prompt {
+      font-family: var(--math);
+      font-size: clamp(34px, 5.5vw, 56px);
+      font-weight: 500;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.3;
+      user-select: none;
+      min-height: 1.4em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0;
+    }
 
-  .feedback-tag{font-family:var(--mono);font-size:15px;font-weight:600;min-height:1.2em;}
-  .feedback-tag.ok{color:var(--accent);}
-  .feedback-tag.bad{color:var(--danger);}
+    .answer-shown {
+      font-family: var(--mono);
+      font-size: 18px;
+      color: var(--accent-strong);
+      background: var(--accent-dim);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 18px;
+      letter-spacing: .01em;
+    }
 
-  /* ---------- summary ---------- */
-  .summary{width:100%;max-width:660px;margin:0 auto;display:flex;flex-direction:column;gap:26px;align-items:center;text-align:center;}
-  .summary-title{font-size:30px;font-weight:700;letter-spacing:-0.01em;}
-  .summary-sub{font-size:16px;color:var(--text-dim);max-width:460px;line-height:1.55;}
-  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;}
-  .stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 10px;}
-  .stat-num{font-family:var(--mono);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;}
-  .stat-label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin-top:6px;}
-  .summary-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+    /* ---------- Breakdown Chips & Keyboard Badges ---------- */
+    .breakdown {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: stretch;
+      max-width: 760px;
+      margin: 6px 0;
+    }
+    .tok {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      min-width: 60px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .tok-char {
+      font-family: var(--mono);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: pre;
+      line-height: 1;
+    }
+    .tok-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+    .tok-desc {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .tok-kbd-combo {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-strong);
+    }
+    kbd.kbd-key {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--surface-3);
+      color: var(--accent-strong);
+      border: 1.5px solid var(--border-strong);
+      border-bottom: 3.5px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 3px 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+      display: inline-block;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+    kbd.kbd-key.shift-key {
+      background: rgba(226, 183, 20, 0.2);
+      color: var(--accent-strong);
+      border-color: var(--accent);
+    }
+    .tok.is-active {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      transform: scale(1.04);
+      box-shadow: 0 0 16px rgba(226, 183, 20, 0.3);
+    }
+    .tok.is-active .tok-char { color: var(--accent-strong); }
+    .tok.is-active kbd.kbd-key {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent-strong);
+    }
+    .tok.is-done { opacity: .35; }
+    .tok-fn .tok-char { color: var(--accent-strong); }
 
-  @media (max-width:640px){
-    .stat-grid{grid-template-columns:repeat(2,1fr);}
-    .card{padding:40px 24px 30px;}
-    .prompt{font-size:clamp(30px,9vw,44px);}
-  }
+    /* ---------- Keyboard Legend Chips ---------- */
+    .key-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      max-width: 740px;
+      margin-top: 8px;
+    }
+    .key-legend-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-faint);
+      font-weight: 700;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 14px;
+    }
+    .legend-chip b {
+      font-family: var(--mono);
+      color: var(--accent-strong);
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .legend-chip i {
+      font-style: normal;
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
-  /* ---------- math markup ---------- */
-  .mx-sup{font-size:0.6em;font-weight:600;position:relative;top:-0.5em;line-height:0;}
-  .mx-sub{font-size:0.6em;position:relative;top:0.28em;line-height:0;}
-  .mx-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.1;}
-  .mx-frac .mx-num, .mx-frac .mx-den{display:block;padding:0 4px;}
-  .mx-frac .mx-num{border-bottom:1.5px solid currentColor;padding-bottom:2px;}
-  .mx-frac .mx-den{padding-top:2px;}
-  .mx-sqrt{display:inline-flex;align-items:flex-start;margin:0 2px;}
-  .mx-radical-sign{transform:scaleY(1.15) translateY(1px);margin-right:1px;}
-  .mx-radicand{border-top:1.5px solid currentColor;padding:0 3px;}
-  .mx-cases{display:inline-flex;align-items:center;vertical-align:middle;margin-left:2px;}
-  .mx-brace{font-size:1.7em;line-height:1;margin-right:6px;font-weight:300;transform:scaleY(1.3);}
-  .mx-case-rows{display:flex;flex-direction:column;gap:2px;text-align:left;}
-  .mx-case-row{display:flex;gap:10px;font-size:0.62em;align-items:baseline;}
-  .mx-case-val{min-width:2.2em;}
-  .mx-case-cond{color:var(--text-dim);}
-</style>
+    .type-stage {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      cursor: text;
+      position: relative;
+    }
+    .type-input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .typed-preview {
+      font-family: var(--math);
+      font-size: clamp(26px, 3.8vw, 34px);
+      font-weight: 500;
+      min-height: 1.3em;
+      text-align: center;
+      color: var(--accent-strong);
+      letter-spacing: .01em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: .95;
+    }
+    .typed-preview.is-empty { opacity: .3; }
+
+    .word-line {
+      font-family: var(--mono);
+      font-size: clamp(24px, 4vw, 34px);
+      min-height: 1.5em;
+      text-align: center;
+      letter-spacing: .02em;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-weight: 500;
+    }
+    .diff-ch { white-space: pre; }
+    .diff-ok { color: var(--text); }
+    .diff-bad { color: var(--danger); text-decoration: underline; text-decoration-color: var(--danger); text-underline-offset: 3px; }
+    .diff-rest { color: var(--text-faint); white-space: pre; }
+    .diff-placeholder { color: var(--text-faint); font-style: normal; font-size: 18px; }
+    .caret {
+      display: inline-block;
+      width: 3px;
+      background: var(--accent);
+      margin-left: 2px;
+      animation: caret-blink 1s step-end infinite;
+    }
+    @keyframes caret-blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    .word-line.wrong-flash { animation: shake .28s ease; }
+    @keyframes shake {
+      0%,100%{transform:translateX(0);}
+      25%{transform:translateX(-6px);}
+      75%{transform:translateX(6px);}
+    }
+
+    .note-box {
+      max-width: 640px;
+      background: var(--warn-dim);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: var(--warn);
+      line-height: 1.5;
+      text-align: center;
+    }
+    .note-box b { font-family: var(--mono); }
+
+    .card-actions { display: flex; gap: 12px; }
+    .btn {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      color: var(--text-dim);
+      transition: all 0.15s ease;
+    }
+    .btn:hover { color: var(--text); border-color: var(--text-dim); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .btn-reveal { color: var(--danger); border-color: transparent; background: var(--danger-dim); }
+    .btn-reveal:hover { background: rgba(239,68,68,0.25); color: #fff; }
+    .btn-primary { background: var(--accent); color: #0f172a; border-color: transparent; font-weight: 700; }
+    .btn-primary:hover { background: var(--accent-strong); color: #0f172a; }
+
+    .feedback-tag { font-family: var(--mono); font-size: 14px; font-weight: 700; min-height: 1.2em; text-transform: uppercase; letter-spacing: .05em; }
+    .feedback-tag.ok { color: var(--success); }
+    .feedback-tag.bad { color: var(--danger); }
+
+    /* ---------- Summary Screen ---------- */
+    .summary { width: 100%; max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; align-items: center; text-align: center; }
+    .summary-title { font-family: var(--heading); font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
+    .summary-sub { font-size: 15px; color: var(--text-dim); max-width: 480px; line-height: 1.55; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; }
+    .stat-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .stat-num { font-family: var(--mono); font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); margin-top: 6px; font-weight: 600; }
+    .summary-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    @media (max-width: 640px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .card { padding: 32px 20px 24px; }
+      .prompt { font-size: clamp(26px, 8vw, 40px); }
+      .part-switcher { flex-direction: column; }
+    }
+
+    /* Math Markup Styling */
+    .mx-sup { font-size: 0.6em; font-weight: 600; position: relative; top: -0.5em; line-height: 0; }
+    .mx-sub { font-size: 0.6em; position: relative; top: 0.28em; line-height: 0; }
+    .mx-frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 3px; line-height: 1.1; }
+    .mx-frac .mx-num, .mx-frac .mx-den { display: block; padding: 0 4px; }
+    .mx-frac .mx-num { border-bottom: 1.5px solid currentColor; padding-bottom: 2px; }
+    .mx-frac .mx-den { padding-top: 2px; }
+    .mx-sqrt { display: inline-flex; align-items: flex-start; margin: 0 2px; }
+    .mx-radical-sign { transform: scaleY(1.15) translateY(1px); margin-right: 1px; }
+    .mx-radicand { border-top: 1.5px solid currentColor; padding: 0 3px; }
+    .mx-cases { display: inline-flex; align-items: center; vertical-align: middle; margin-left: 2px; }
+    .mx-brace { font-size: 1.7em; line-height: 1; margin-right: 6px; font-weight: 300; transform: scaleY(1.3); }
+    .mx-case-rows { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+    .mx-case-row { display: flex; gap: 10px; font-size: 0.62em; align-items: baseline; }
+    .mx-case-val { min-width: 2.2em; }
+    .mx-case-cond { color: var(--text-dim); }
+    .mx-abs { display: inline-flex; align-items: center; padding: 0 2px; border-left: 2px solid currentColor; border-right: 2px solid currentColor; margin: 0 2px; }
+  </style>
+</head>
+<body>
 
 <div id="root"></div>
 
@@ -298,21 +669,34 @@
 (function(){
 "use strict";
 
-/* ============================== CONTENT ============================== */
+/* ============================== DATA & CATEGORIES ============================== */
 
 var CATEGORY_META = {
-  exp:       { label: "Exponents & Operations", blurb: "Powers, coefficients, implicit multiplication." },
-  roots:     { label: "Roots",                  blurb: "Radicals, nested roots, nudging past auto-parens." },
-  frac:      { label: "Fractions",               blurb: "Stacked fractions and exiting the denominator." },
-  trig:      { label: "Trig & Logs",             blurb: "sin/cos/tan, log, ln, and log with a base." },
-  piecewise: { label: "Piecewise Functions",     blurb: "Desmos's { condition : value } syntax." },
-  combined:  { label: "Combined / Real-World",   blurb: "Circles, parabolas, transforms — everything at once." }
+  // Part 1: Desmos Master Syntax
+  exp:         { part: "master", label: "Exponents & Operations",    blurb: "Powers, terms, coefficients, implicit multiplication." },
+  roots:       { part: "master", label: "Roots & Radicals",          blurb: "Radicals, nested roots, escaping auto-parens with →." },
+  frac:        { part: "master", label: "Stacked Fractions",          blurb: "Fraction bars, multi-level denominators, parenthesized numerators." },
+  trig:        { part: "master", label: "Trig, Logs & Subscripts",    blurb: "sin/cos/tan, log, ln, and log_b base subscripts." },
+  piecewise:   { part: "master", label: "Piecewise Functions",        blurb: "Desmos { condition : value } syntax and multi-branch intervals." },
+  ineq_abs:    { part: "master", label: "Inequalities & Abs Value",   blurb: "abs(x) absolute values, ≤, ≥, and shaded regional bounds." },
+  combined:    { part: "master", label: "Advanced Formulas",          blurb: "Complex circles, parabolas, rational transforms." },
+
+  // Part 2: SAT Math Desmos
+  sat_linear:  { part: "sat", label: "Linear Systems & Regression",   blurb: "y=mx+b, standard forms, intersection finding, and y_1~mx_1+b regression." },
+  sat_quadratics:{ part: "sat", label: "Quadratics & Vertex Form",    blurb: "a(x-h)²+k vertex forms, roots, discriminant b²-4ac, and parabolic fits." },
+  sat_exp:     { part: "sat", label: "Exponential Growth & Decay",   blurb: "A=P(1+r)^t growth models, decay percentages, compound interest." },
+  sat_circles: { part: "sat", label: "Circles & Geometry",           blurb: "(x-h)²+(y-k)²=r² standard forms, center-radius extraction, distance." },
+  sat_rational:{ part: "sat", label: "Rational & Radical Equations", blurb: "Extraneous solution testing, cross-multiplication, radical isolation." },
+  sat_hacks:   { part: "sat", label: "SAT Desmos Hacks & Tools",     blurb: "Table regressions, slider parameters k=, mean/stdev, abs distance hacks." }
 };
 
-var CATEGORY_ORDER = ["exp","roots","frac","trig","piecewise","combined"];
+var CATEGORY_ORDER = {
+  master: ["exp", "roots", "frac", "trig", "piecewise", "ineq_abs", "combined"],
+  sat: ["sat_linear", "sat_quadratics", "sat_exp", "sat_circles", "sat_rational", "sat_hacks"]
+};
 
 var CONTENT = {
-
+  // Desmos Master
   exp: [
     { display:"x^{2}",                answer:"x^2", difficulty:"easy" },
     { display:"2x^{3}+1",             answer:"2x^3+1", difficulty:"easy" },
@@ -328,8 +712,7 @@ var CONTENT = {
     { display:"(2x)^{2}",             answer:"(2x)^2", difficulty:"easy" },
     { display:"x^{2}y^{3}",           answer:"x^2y^3", acceptableVariants:["x^2*y^3"], difficulty:"medium" },
     { display:"10^{x}",               answer:"10^x", difficulty:"easy" },
-    { display:"x^{100}+5", answer:"x^100+5", difficulty:"hard",
-      note:"Digits keep extending the exponent box. Press → after the 100 to step back down to the baseline before typing +5." },
+    { display:"x^{100}+5",            answer:"x^100+5", difficulty:"hard", note:"Press → after 100 to exit the exponent before +5." },
     { display:"3(x-2)^{2}+4x-7",      answer:"3(x-2)^2+4x-7", difficulty:"hard" }
   ],
 
@@ -337,8 +720,7 @@ var CONTENT = {
     { display:"sqrt{x}",                         answer:"sqrt(x)", difficulty:"easy" },
     { display:"sqrt{x^{2}+1}",                    answer:"sqrt(x^2+1)", difficulty:"medium" },
     { display:"sqrt{25}",                          answer:"sqrt(25)", difficulty:"easy" },
-    { display:"sqrt{x}+3", answer:"sqrt(x)+3", difficulty:"medium",
-      note:"sqrt( opens a radical with its closing paren already placed. Type the argument, then → to exit before +3." },
+    { display:"sqrt{x}+3",                        answer:"sqrt(x)+3", difficulty:"medium", note:"Type sqrt( then argument, then → to exit before +3." },
     { display:"sqrt{sqrt{x}}",                     answer:"sqrt(sqrt(x))", difficulty:"medium" },
     { display:"2sqrt{x}",                          answer:"2sqrt(x)", acceptableVariants:["2*sqrt(x)"], difficulty:"easy" },
     { display:"sqrt{x}sqrt{y}",                    answer:"sqrt(x)sqrt(y)", acceptableVariants:["sqrt(x)*sqrt(y)"], difficulty:"medium" },
@@ -356,15 +738,13 @@ var CONTENT = {
   frac: [
     { display:"frac{x}{y}",                        answer:"x/y", difficulty:"easy" },
     { display:"frac{x+1}{y-2}",                     answer:"(x+1)/(y-2)", difficulty:"medium" },
-    { display:"frac{1}{2}x+3", answer:"1/2x+3", difficulty:"medium",
-      note:"After typing the denominator 2, press → to climb out of the fraction — otherwise x+3 lands inside the denominator." },
+    { display:"frac{1}{2}x+3",                     answer:"1/2x+3", difficulty:"medium", note:"Press → after denominator 2 so x+3 isn't stuck inside denominator." },
     { display:"frac{x^{2}+1}{x-1}",                 answer:"(x^2+1)/(x-1)", difficulty:"medium" },
     { display:"3+frac{1}{x}",                       answer:"3+1/x", difficulty:"easy" },
     { display:"frac{x+y}{2}",                       answer:"(x+y)/2", difficulty:"easy" },
     { display:"frac{1}{x^{2}}",                     answer:"1/x^2", difficulty:"easy" },
     { display:"frac{sqrt{x}}{2}",                   answer:"sqrt(x)/2", difficulty:"medium" },
-    { display:"frac{x}{frac{y}{z}}", answer:"x/(y/z)", difficulty:"hard",
-      note:"For a fraction inside a fraction, wrap the inner one in parens rather than arrowing through two denominators." },
+    { display:"frac{x}{frac{y}{z}}",                answer:"x/(y/z)", difficulty:"hard", note:"Wrap inner fractions in parentheses." },
     { display:"frac{2x+1}{3}-frac{x}{4}",           answer:"(2x+1)/3-x/4", difficulty:"hard" },
     { display:"frac{5}{x+2}",                       answer:"5/(x+2)", difficulty:"easy" },
     { display:"frac{x-3}{x+3}",                     answer:"(x-3)/(x+3)", difficulty:"medium" },
@@ -382,10 +762,8 @@ var CONTENT = {
     { display:"log{x^{2}+1}",   answer:"log(x^2+1)", difficulty:"medium" },
     { display:"2sin{x}-1",      answer:"2sin(x)-1", acceptableVariants:["2*sin(x)-1"], difficulty:"medium" },
     { display:"sin{x}+cos{x}",  answer:"sin(x)+cos(x)", difficulty:"medium" },
-    { display:"e^{x}+1", answer:"e^x+1", difficulty:"medium",
-      note:"Type the exponent, then → to drop back to the baseline before continuing with +1." },
-    { display:"log_{2}{x}", answer:"log_2(x)", difficulty:"hard",
-      note:"log then _ opens the base slot. Type 2, then → to exit the subscript before the parenthesis." },
+    { display:"e^{x}+1",        answer:"e^x+1", difficulty:"medium", note:"Type exponent, then → to drop to baseline before +1." },
+    { display:"log_{2}{x}",     answer:"log_2(x)", difficulty:"hard", note:"log then _ opens base subscript slot. Type 2 then →." },
     { display:"sin{x}cos{x}",   answer:"sin(x)cos(x)", acceptableVariants:["sin(x)*cos(x)"], difficulty:"medium" },
     { display:"tan{3x}",        answer:"tan(3x)", difficulty:"easy" },
     { display:"ln{x}+ln{y}",    answer:"ln(x)+ln(y)", difficulty:"medium" },
@@ -393,20 +771,29 @@ var CONTENT = {
   ],
 
   piecewise: [
-    { display:"cases{x<0|-1;x>=0|1}",                       answer:"{x<0:-1,x>=0:1}", difficulty:"easy",
-      note:"Each comma inside the braces starts a new piece; Tab jumps from the condition slot to the value slot." },
+    { display:"cases{x<0|-1;x>=0|1}",                       answer:"{x<0:-1,x>=0:1}", difficulty:"easy", note:"Commas separate pieces; colon separates condition from value." },
     { display:"cases{x<0|-x;x>=0|x}",                        answer:"{x<0:-x,x>=0:x}", difficulty:"easy" },
     { display:"cases{x>0|1;x<=0|-1}",                         answer:"{x>0:1,x<=0:-1}", difficulty:"easy" },
-    { display:"cases{-1<=x<=1|x;x<-1|-1;x>1|1}", answer:"{-1<=x<=1:x,x<-1:-1,x>1:1}", difficulty:"hard",
-      note:"Desmos accepts compound inequalities like -1<=x<=1 directly as one condition — no 'and' needed." },
+    { display:"cases{-1<=x<=1|x;x<-1|-1;x>1|1}",            answer:"{-1<=x<=1:x,x<-1:-1,x>1:1}", difficulty:"hard", note:"Desmos accepts compound inequalities like -1<=x<=1 directly." },
     { display:"cases{x<1|1;x<2|2;x<3|3}",                     answer:"{x<1:1,x<2:2,x<3:3}", difficulty:"medium" },
-    { display:"cases{0<=x<=5|x^{2}}", answer:"{0<=x<=5:x^2}", difficulty:"medium",
-      note:"A single condition with no other piece leaves the function undefined outside that domain — that's expected." },
+    { display:"cases{0<=x<=5|x^{2}}",                       answer:"{0<=x<=5:x^2}", difficulty:"medium" },
     { display:"cases{x<0|0;x>=0|x^{2}}",                      answer:"{x<0:0,x>=0:x^2}", difficulty:"easy" },
     { display:"cases{x<2|x+1;x>=2|5}",                        answer:"{x<2:x+1,x>=2:5}", difficulty:"medium" },
     { display:"cases{x<=0|-x^{2};x>0|x^{2}}",                 answer:"{x<=0:-x^2,x>0:x^2}", difficulty:"medium" },
     { display:"cases{-2<x<2|4-x^{2}}",                        answer:"{-2<x<2:4-x^2}", difficulty:"medium" },
-    { display:"cases{x<-2|-2;-2<=x<=2|x;x>2|2}", answer:"{x<-2:-2,-2<=x<=2:x,x>2:2}", difficulty:"hard" }
+    { display:"cases{x<-2|-2;-2<=x<=2|x;x>2|2}",            answer:"{x<-2:-2,-2<=x<=2:x,x>2:2}", difficulty:"hard" }
+  ],
+
+  ineq_abs: [
+    { display:"abs{x-3}=5",           answer:"abs(x-3)=5", difficulty:"easy", note:"In Desmos, typing abs( creates absolute value bars." },
+    { display:"abs{2x+1}<7",          answer:"abs(2x+1)<7", difficulty:"medium" },
+    { display:"y>2x-3",               answer:"y>2x-3", difficulty:"easy" },
+    { display:"y<=-x+4",              answer:"y<=-x+4", difficulty:"easy", note:"Type <= to get ≤ symbol." },
+    { display:"2x-5y>=10",            answer:"2x-5y>=10", difficulty:"medium", note:"Type >= to get ≥ symbol." },
+    { display:"abs{x-2}+3=8",         answer:"abs(x-2)+3=8", difficulty:"medium" },
+    { display:"abs{x+4}<=9",          answer:"abs(x+4)<=9", difficulty:"medium" },
+    { display:"y>=x^{2}-4",           answer:"y>=x^2-4", difficulty:"medium" },
+    { display:"3abs{x-1}-2=7",        answer:"3abs(x-1)-2=7", difficulty:"hard" }
   ],
 
   combined: [
@@ -414,29 +801,163 @@ var CONTENT = {
     { display:"(x-2)^{2}+(y+3)^{2}=16",             answer:"(x-2)^2+(y+3)^2=16", difficulty:"medium" },
     { display:"y=2(x-1)^{2}+3",                     answer:"y=2(x-1)^2+3", difficulty:"medium" },
     { display:"sqrt{(x-1)^{2}+(y-2)^{2}}=5",        answer:"sqrt((x-1)^2+(y-2)^2)=5", difficulty:"hard" },
-    { display:"y=e^{-x^{2}}", answer:"y=e^(-x^2)", difficulty:"hard",
-      note:"Typing ( right after ^ gives a literal parenthesized exponent instead of the auto-sized box — handy for grouped exponents like this." },
+    { display:"y=e^{-x^{2}}",                       answer:"y=e^(-x^2)", difficulty:"hard" },
     { display:"y=frac{x^{2}-1}{x+2}",               answer:"y=(x^2-1)/(x+2)", difficulty:"medium" },
     { display:"y=log{x^{2}+1}",                      answer:"y=ln(x^2+1)", difficulty:"medium" },
     { display:"frac{x^{2}}{9}+frac{y^{2}}{4}=1",     answer:"x^2/9+y^2/4=1", difficulty:"medium" },
     { display:"y=sqrt{x}sin{x}",                     answer:"y=sqrt(x)sin(x)", acceptableVariants:["y=sqrt(x)*sin(x)"], difficulty:"medium" },
     { display:"y=-2sqrt{x-3}+1",                     answer:"y=-2sqrt(x-3)+1", difficulty:"medium" },
     { display:"y=3sin{2(x-1)}+frac{sqrt{x}}{2}",     answer:"y=3sin(2(x-1))+sqrt(x)/2", difficulty:"hard" }
+  ],
+
+  // SAT Math Desmos
+  sat_linear: [
+    { display:"y=3x+7",                             answer:"y=3x+7", difficulty:"easy" },
+    { display:"2x+5y=20",                           answer:"2x+5y=20", difficulty:"easy" },
+    { display:"y-4=-2(x+3)",                        answer:"y-4=-2(x+3)", difficulty:"medium" },
+    { display:"y_{1}~mx_{1}+b",                     answer:"y_1~mx_1+b", difficulty:"hard", note:"SAT Desmos Hack: Type y_1 then ~ (tilde) for linear table regression!" },
+    { display:"y=-frac{1}{2}x+5",                   answer:"y=-1/2x+5", difficulty:"medium" },
+    { display:"cases{y=2x+1;y=-x+7}",               answer:"{y=2x+1,y=-x+7}", difficulty:"medium", note:"Type piecewise system to graph 2 linear equations at once." },
+    { display:"cases{3x+2y=12;x-y=1}",              answer:"{3x+2y=12,x-y=1}", difficulty:"medium" },
+    { display:"frac{y_{2}-y_{1}}{x_{2}-x_{1}}",     answer:"(y_2-y_1)/(x_2-x_1)", difficulty:"medium" },
+    { display:"y=4x-9",                             answer:"y=4x-9", difficulty:"easy" },
+    { display:"ax+by=c",                             answer:"ax+by=c", difficulty:"easy" }
+  ],
+
+  sat_quadratics: [
+    { display:"y=a(x-h)^{2}+k",                     answer:"y=a(x-h)^2+k", difficulty:"easy", note:"SAT Vertex Form: Desmos graphs (h,k) vertex instantly." },
+    { display:"y=2(x-3)^{2}+5",                     answer:"y=2(x-3)^2+5", difficulty:"medium" },
+    { display:"y=x^{2}-6x+9",                       answer:"y=x^2-6x+9", difficulty:"easy" },
+    { display:"0=2x^{2}-5x-3",                      answer:"0=2x^2-5x-3", difficulty:"medium", note:"Click x-intercepts on Desmos to solve quadratic roots!" },
+    { display:"b^{2}-4ac",                           answer:"b^2-4ac", difficulty:"medium", note:"Discriminant: >0 has 2 roots, =0 has 1, <0 has none." },
+    { display:"y=-(x+2)^{2}+16",                    answer:"y=-(x+2)^2+16", difficulty:"medium" },
+    { display:"y=(x-4)(x+2)",                       answer:"y=(x-4)(x+2)", difficulty:"easy" },
+    { display:"x=frac{-b+sqrt{b^{2}-4ac}}{2a}",     answer:"x=(-b+sqrt(b^2-4ac))/(2a)", difficulty:"hard" },
+    { display:"y_{1}~ax_{1}^{2}+bx_{1}+c",          answer:"y_1~ax_1^2+bx_1+c", difficulty:"hard", note:"SAT Quadratic Regression Hack: Fits 3 table points." }
+  ],
+
+  sat_exp: [
+    { display:"y=1500(1.05)^{t}",                   answer:"y=1500(1.05)^t", difficulty:"medium", note:"1.05 represents a 5% exponential growth rate." },
+    { display:"y=2500(0.85)^{t}",                   answer:"y=2500(0.85)^t", difficulty:"medium", note:"0.85 represents a 15% exponential decay rate." },
+    { display:"A=P(1+r)^{t}",                       answer:"A=P(1+r)^t", difficulty:"medium" },
+    { display:"y=50(2)^{frac{t}{3}}",                answer:"y=50(2)^(t/3)", difficulty:"hard", note:"Doubling time t/3." },
+    { display:"y=a(b)^{x}",                         answer:"y=a(b)^x", difficulty:"easy" },
+    { display:"A=P(1+frac{r}{n})^{nt}",             answer:"A=P(1+r/n)^(nt)", difficulty:"hard" },
+    { display:"y_{1}~a(b)^{x_{1}}",                 answer:"y_1~a(b)^(x_1)", difficulty:"hard", note:"SAT Exponential Regression Hack." }
+  ],
+
+  sat_circles: [
+    { display:"(x-3)^{2}+(y+4)^{2}=25",             answer:"(x-3)^2+(y+4)^2=25", difficulty:"medium", note:"Circle centered at (3,-4) with radius r=sqrt(25)=5." },
+    { display:"x^{2}+y^{2}=49",                     answer:"x^2+y^2=49", difficulty:"easy" },
+    { display:"x^{2}+y^{2}-6x+8y=0",                answer:"x^2+y^2-6x+8y=0", difficulty:"medium", note:"Desmos automatically completes the square when graphed!" },
+    { display:"(x+1)^{2}+(y-5)^{2}=12",             answer:"(x+1)^2+(y-5)^2=12", difficulty:"medium" },
+    { display:"sqrt{(x_{2}-x_{1})^{2}+(y_{2}-y_{1})^{2}}", answer:"sqrt((x_2-x_1)^2+(y_2-y_1)^2)", difficulty:"hard" },
+    { display:"(x-h)^{2}+(y-k)^{2}=r^{2}",          answer:"(x-h)^2+(y-k)^2=r^2", difficulty:"medium" }
+  ],
+
+  sat_rational: [
+    { display:"frac{x^{2}-9}{x-3}=6",               answer:"(x^2-9)/(x-3)=6", difficulty:"medium", note:"Extraneous check: Desmos shows undefined hole at x=3." },
+    { display:"sqrt{2x+5}=x-1",                     answer:"sqrt(2x+5)=x-1", difficulty:"medium", note:"Intersect Y=left and Y=right to spot real roots." },
+    { display:"frac{1}{x}+frac{1}{x-2}=frac{3}{4}", answer:"1/x+1/(x-2)=3/4", difficulty:"hard" },
+    { display:"sqrt{3x+1}+4=10",                    answer:"sqrt(3x+1)+4=10", difficulty:"medium" },
+    { display:"frac{2x+3}{x-1}=5",                  answer:"(2x+3)/(x-1)=5", difficulty:"medium" }
+  ],
+
+  sat_hacks: [
+    { display:"y_{1}~mx_{1}+b",                     answer:"y_1~mx_1+b", difficulty:"medium", note:"Linear Table Regression Hack." },
+    { display:"y_{1}~ax_{1}^{2}+bx_{1}+c",          answer:"y_1~ax_1^2+bx_1+c", difficulty:"hard", note:"Quadratic Table Regression Hack." },
+    { display:"abs{x-5}=12",                        answer:"abs(x-5)=12", difficulty:"easy", note:"In Desmos, absolute value distance graphs 2 vertical lines." },
+    { display:"k=4",                                answer:"k=4", difficulty:"easy", note:"Type variable=constant to add a interactive slider!" },
+    { display:"cases{y>2x-1;y<=-x+5}",              answer:"{y>2x-1,y<=-x+5}", difficulty:"medium", note:"System of inequality shading region." },
+    { display:"mean(12,15,18,22,30)",               answer:"mean(12,15,18,22,30)", difficulty:"medium", note:"Desmos SAT Stats Hack: mean(list) calculates average." },
+    { display:"stdev(4,8,15,16,23,42)",             answer:"stdev(4,8,15,16,23,42)", difficulty:"hard", note:"Calculates standard deviation." }
   ]
 };
 
 var TIPS = [
   { key:"→ exits boxes", body:"Arrow keys step out of a fraction, exponent, radical, or subscript instead of clicking outside it." },
-  { key:"sqrt( auto-closes",  body:"Typing sqrt( places the closing paren for you — type the argument, then → to move past it." },
-  { key:"Tab jumps blanks",   body:"In piecewise and multi-part expressions, Tab moves the cursor to the next empty slot." },
-  { key:"^( for literal parens", body:"Pressing ( right after ^ groups the exponent explicitly — useful for e^(-x^2)-style terms." }
+  { key:"sqrt( auto-closes", body:"Typing sqrt( places the closing paren for you — type argument, then → to move past it." },
+  { key:"y_1 ~ regression", body:"In SAT Math, type y_1 ~ mx_1 + b after creating a table to find line of best fit instantly." },
+  { key:"Tab jumps blanks", body:"In piecewise and multi-part expressions, Tab moves the cursor to the next empty slot." },
+  { key:"^( for literal parens", body:"Pressing ( right after ^ groups exponent explicitly — useful for e^(-x^2) terms." }
 ];
 
-var LEARN_TIME = 0;      // untimed
-var PRACTICE_TIME = 18;  // seconds
-var BLITZ_TIME = 6;      // seconds
-var PRACTICE_UNLOCK = 70;  // % accuracy to unlock blitz
-var MASTER_THRESHOLD = 80; // % accuracy in blitz to mark mastered
+/* ============================== DYNAMIC TIMING ENGINE ============================== */
+
+function calculateAllowedTime(answer, phase, paceMultiplier) {
+  if (phase === "learn") return 0; // Untimed
+  
+  var charCount = answer.length;
+  var sqrtCount = (answer.match(/sqrt/g) || []).length;
+  var fracCount = (answer.match(/\//g) || []).length;
+  var powCount = (answer.match(/\^/g) || []).length;
+  var subCount = (answer.match(/_/g) || []).length;
+  var braceCount = (answer.match(/[{}]/g) || []).length;
+  var fnCount = (answer.match(/sin|cos|tan|log|ln|abs|mean|stdev/g) || []).length;
+
+  var complexityScore = (sqrtCount * 1.5) + (fracCount * 1.5) + (powCount * 1.0) + (subCount * 1.0) + (braceCount * 1.0) + (fnCount * 1.0);
+
+  var baseSeconds = 0;
+  if (phase === "practice") {
+    baseSeconds = 6 + (charCount * 0.5) + complexityScore;
+    baseSeconds = Math.max(8, Math.min(32, baseSeconds));
+  } else if (phase === "blitz") {
+    baseSeconds = 3.5 + (charCount * 0.25) + (complexityScore * 0.5);
+    baseSeconds = Math.max(4.5, Math.min(18, baseSeconds));
+  }
+
+  return Math.round(baseSeconds * (paceMultiplier || 1.0) * 10) / 10;
+}
+
+var PRACTICE_UNLOCK = 70;
+var MASTER_THRESHOLD = 80;
+
+/* ============================== SOUND SYNTHESIZER ============================== */
+var soundEnabled = true;
+var audioCtx = null;
+
+function playSound(type) {
+  if (!soundEnabled) return;
+  try {
+    if (!audioCtx) {
+      var AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    var now = audioCtx.currentTime;
+    if (type === "correct") {
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } else if (type === "wrong") {
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } else if (type === "click") {
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(400, now);
+      gain.gain.setValueAtTime(0.03, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.start(now);
+      osc.stop(now + 0.04);
+    }
+  } catch(e) {}
+}
 
 /* ============================== MATH RENDERER ============================== */
 
@@ -468,6 +989,11 @@ function renderMath(str){
       var den = captureGroup();
       return '<span class="mx-frac"><span class="mx-num">' + renderMath(num) + '</span><span class="mx-den">' + renderMath(den) + '</span></span>';
     }
+    if (str.startsWith("abs{", i)){
+      i += 3;
+      var absInner = captureGroup();
+      return '<span class="mx-abs">' + renderMath(absInner) + '</span>';
+    }
     if (str.startsWith("sin{", i) || str.startsWith("cos{", i) || str.startsWith("tan{", i) || str.startsWith("log{", i) || str.startsWith("ln{", i)){
       var fn = str.slice(i, i+3);
       i += 3;
@@ -480,7 +1006,7 @@ function renderMath(str){
       var rows = raw.split(";").map(function(seg){
         var parts = seg.split("|");
         var cond = parts[0], val = parts[1];
-        return '<span class="mx-case-row"><span class="mx-case-val">' + renderMath(val) + '</span><span class="mx-case-cond">' + renderMath(cond) + '</span></span>';
+        return '<span class="mx-case-row"><span class="mx-case-val">' + renderMath(val || "") + '</span><span class="mx-case-cond">' + renderMath(cond || "") + '</span></span>';
       }).join("");
       return '<span class="mx-cases"><span class="mx-brace">{</span><span class="mx-case-rows">' + rows + '</span></span>';
     }
@@ -502,8 +1028,6 @@ function renderMath(str){
   return out;
 }
 
-/* Renders the user's raw typed Desmos-style string (real ^, _, sqrt(, parens)
-   as live visual math, so typing feels like watching Desmos's own input bar. */
 function renderTypedPreview(str){
   var i = 0;
   function captureParenGroup(){
@@ -526,6 +1050,11 @@ function renderTypedPreview(str){
       i += 4;
       var inner = captureParenGroup();
       return '<span class="mx-sqrt"><span class="mx-radical-sign">√</span><span class="mx-radicand">' + renderTypedPreview(inner) + '</span></span>';
+    }
+    if (str.startsWith("abs(", i)){
+      i += 3;
+      var absInner = captureParenGroup();
+      return '<span class="mx-abs">' + renderTypedPreview(absInner) + '</span>';
     }
     if (str[i] === "^"){
       i++;
@@ -552,36 +1081,56 @@ function renderTypedPreview(str){
 /* ============================== KEYSTROKE BREAKDOWN & KEY GUIDE ============================== */
 
 var KEY_LABELS = {
-  "^": "power · ⇧ 6",
-  "_": "subscript · ⇧ -",
-  "/": "divide",
-  "*": "multiply · ⇧ 8",
-  "+": "plus",
-  "-": "minus",
-  "(": "open · ⇧ 9",
-  ")": "close · ⇧ 0",
-  "{": "open piece · ⇧ [",
-  "}": "close piece · ⇧ ]",
-  "<=": "≤ · ⇧ , then =",
-  ">=": "≥ · ⇧ . then =",
-  "<": "less than · ⇧ ,",
-  ">": "greater than · ⇧ .",
-  "=": "equals",
-  ":": "colon · ⇧ ;",
-  ",": "comma"
+  "^":  { desc: "Power", keys: ["Shift", "6"] },
+  "_":  { desc: "Subscript", keys: ["Shift", "-"] },
+  "/":  { desc: "Divide", keys: ["/"] },
+  "*":  { desc: "Multiply", keys: ["Shift", "8"] },
+  "+":  { desc: "Plus", keys: ["Shift", "="] },
+  "-":  { desc: "Minus", keys: ["-"] },
+  "~":  { desc: "Tilde (Regression)", keys: ["Shift", "`"] },
+  "(":  { desc: "Open Paren", keys: ["Shift", "9"] },
+  ")":  { desc: "Close Paren", keys: ["Shift", "0"] },
+  "{":  { desc: "Open Piece", keys: ["Shift", "["] },
+  "}":  { desc: "Close Piece", keys: ["Shift", "]"] },
+  "<=": { desc: "≤ Symbol", sequence: [["Shift", ","], ["="]] },
+  ">=": { desc: "≥ Symbol", sequence: [["Shift", "."], ["="]] },
+  "<":  { desc: "Less Than", keys: ["Shift", ","] },
+  ">":  { desc: "Greater Than", keys: ["Shift", "."] },
+  "=":  { desc: "Equals", keys: ["="] },
+  ":":  { desc: "Colon", keys: ["Shift", ";"] },
+  ",":  { desc: "Comma", keys: [","] }
 };
-var FN_NAMES = ["sqrt","sin","cos","tan","log","ln"];
+
+var FN_NAMES = ["sqrt","sin","cos","tan","log","ln","abs","mean","stdev","ncr"];
+
+function renderKbdBadge(keyStr) {
+  var isShift = keyStr.toLowerCase() === "shift";
+  return '<kbd class="kbd-key' + (isShift ? " shift-key" : "") + '">' + escapeHtml(keyStr) + '</kbd>';
+}
+
+function renderKeyComboHtml(info) {
+  if (!info) return '';
+  if (info.sequence) {
+    return info.sequence.map(function(seq) {
+      return seq.map(renderKbdBadge).join(' + ');
+    }).join(' <span style="font-size:11px;color:var(--text-faint);">then</span> ');
+  }
+  if (info.keys) {
+    return info.keys.map(renderKbdBadge).join(' + ');
+  }
+  return '';
+}
 
 function classifyToken(t){
-  if (FN_NAMES.indexOf(t) !== -1) return { kind:"fn", label:"function" };
-  if (/^\d+$/.test(t)) return { kind:"num", label:"number" };
-  if (/^[A-Za-z]$/.test(t)) return { kind:"var", label:"variable" };
-  if (KEY_LABELS[t]) return { kind:"key", label:KEY_LABELS[t] };
+  if (FN_NAMES.indexOf(t) !== -1) return { kind:"fn", label:"Function" };
+  if (/^\d+$/.test(t)) return { kind:"num", label:"Number" };
+  if (/^[A-Za-z]$/.test(t)) return { kind:"var", label:"Variable" };
+  if (KEY_LABELS[t]) return { kind:"key", desc: KEY_LABELS[t].desc, combo: renderKeyComboHtml(KEY_LABELS[t]) };
   return { kind:"other", label:"" };
 }
 
 function tokenizeAnswer(str){
-  var re = /sqrt|sin|cos|tan|log|ln|<=|>=|\d+|[A-Za-z]|./g;
+  var re = /sqrt|sin|cos|tan|log|ln|abs|mean|stdev|ncr|<=|>=|\d+|[A-Za-z]|./g;
   var m, tokens = [];
   while ((m = re.exec(str))){
     tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
@@ -593,44 +1142,89 @@ function renderBreakdown(answer){
   var tokens = tokenizeAnswer(answer);
   var chips = tokens.map(function(tok){
     var info = classifyToken(tok.text);
+    var labelContent = '';
+    if (info.combo) {
+      labelContent = '<div class="tok-desc">' + escapeHtml(info.desc || "") + '</div><div class="tok-kbd-combo">' + info.combo + '</div>';
+    } else if (info.label) {
+      labelContent = '<div class="tok-desc">' + escapeHtml(info.label) + '</div>';
+    }
+
     return '<div class="tok tok-' + info.kind + '" data-start="' + tok.start + '" data-end="' + tok.end + '">' +
       '<div class="tok-char">' + escapeHtml(tok.text) + '</div>' +
-      (info.label ? '<div class="tok-label">' + escapeHtml(info.label) + '</div>' : '') +
+      '<div class="tok-label">' + labelContent + '</div>' +
     '</div>';
   }).join('<div class="tok-arrow">›</div>');
   return chips;
 }
 
 var CATEGORY_KEYS = {
-  exp:       ["^","(",")","-"],
-  roots:     ["(",")","-"],
-  frac:      ["/","(",")","-"],
-  trig:      ["(",")","_","^"],
-  piecewise: ["{","}",":","<",">","-"],
-  combined:  ["^","(",")","/","_","{","}","<",">","=","-"]
+  exp:           ["^","(",")","-"],
+  roots:         ["(",")","-"],
+  frac:          ["/","(",")","-"],
+  trig:          ["(",")","_","^"],
+  piecewise:     ["{","}",":","<",">","-"],
+  ineq_abs:      ["(",")","<",">","<=",">=","=","-"],
+  combined:      ["^","(",")","/","_","{","}","<",">","=","-"],
+
+  sat_linear:    ["=","+","-","/","_","~","{","}"],
+  sat_quadratics:["^","=","+","-","(",")","_","~"],
+  sat_exp:       ["^","=","+","-","(",")","/","_","~"],
+  sat_circles:   ["^","=","+","-","(",")","/"],
+  sat_rational:  ["/","=","+","-","(",")","sqrt"],
+  sat_hacks:     ["~","=","<",">","{","}",":","(",")"]
 };
 
 function renderKeyLegend(catId){
   var chars = CATEGORY_KEYS[catId] || [];
   var chips = chars.map(function(ch){
-    var label = KEY_LABELS[ch] || "";
-    return '<span class="legend-chip"><b>' + escapeHtml(ch) + '</b>' + (label ? '<i>' + escapeHtml(label) + '</i>' : '') + '</span>';
+    var info = KEY_LABELS[ch];
+    var comboHtml = info ? renderKeyComboHtml(info) : "";
+    return '<span class="legend-chip"><b>' + escapeHtml(ch) + '</b>' + (comboHtml ? '<i>' + comboHtml + '</i>' : '') + '</span>';
   }).join("");
-  return '<div class="key-legend"><span class="key-legend-title">on your keyboard</span>' + chips + '</div>';
+  return '<div class="key-legend"><span class="key-legend-title">KEYBOARD SHORTCUTS & SHIFT KEYS</span>' + chips + '</div>';
 }
 
-/* ============================== STATE ============================== */
+/* ============================== STATE & LOCALSTORAGE PERSISTENCE ============================== */
+
+var STORAGE_KEY = "desmos_master_state_v2";
 
 var state = {
+  activePart: "master",     // master | sat
   screen: "home",           // home | session | summary
-  progress: {},              // catId -> { phase, bestStreak, lastAccuracy, mastered, learnedOnce }
+  pace: 1.0,                // 1.4 (Relaxed), 1.0 (Standard), 0.7 (Speedrun)
+  progress: {},             // catId -> { phase, bestStreak, lastAccuracy, mastered }
   session: null,
   lastSummary: null
 };
 
-CATEGORY_ORDER.forEach(function(catId){
-  state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false, learnedOnce: false };
+function loadSavedState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      if (parsed.progress) state.progress = parsed.progress;
+      if (parsed.activePart) state.activePart = parsed.activePart;
+      if (parsed.pace) state.pace = parsed.pace;
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      progress: state.progress,
+      activePart: state.activePart,
+      pace: state.pace
+    }));
+  } catch(e) {}
+}
+
+Object.keys(CATEGORY_META).forEach(function(catId){
+  if (!state.progress[catId]) {
+    state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
+  }
 });
+loadSavedState();
 
 function shuffle(arr){
   var a = arr.slice();
@@ -652,7 +1246,7 @@ function isMatch(input, item){
   return false;
 }
 
-/* ============================== SESSION LOGIC ============================== */
+/* ============================== SESSION ENGINE ============================== */
 
 function startSession(catId){
   var phase = state.progress[catId].phase;
@@ -667,7 +1261,8 @@ function startSession(catId){
     currentStreak: 0,
     bestStreakSession: 0,
     cardStart: 0,
-    timerId: null,
+    animFrameId: null,
+    allowedTime: 0,
     locked: false
   };
   state.screen = "session";
@@ -681,9 +1276,9 @@ function currentItem(){
 }
 
 function stopTimer(){
-  if (state.session && state.session.timerId){
-    clearInterval(state.session.timerId);
-    state.session.timerId = null;
+  if (state.session && state.session.animFrameId){
+    cancelAnimationFrame(state.session.animFrameId);
+    state.session.animFrameId = null;
   }
 }
 
@@ -693,27 +1288,35 @@ function mountCard(){
   s.cardStart = Date.now();
   renderSessionScreen();
 
-  var timeLimit = s.phase === "learn" ? LEARN_TIME : (s.phase === "practice" ? PRACTICE_TIME : BLITZ_TIME);
-  if (timeLimit > 0){
-    var totalMs = timeLimit * 1000;
+  var item = currentItem();
+  s.allowedTime = calculateAllowedTime(item.answer, s.phase, state.pace);
+  
+  if (s.allowedTime > 0){
+    var totalMs = s.allowedTime * 1000;
     var fill = document.getElementById("timerFill");
     var txt = document.getElementById("timerText");
-    s.timerId = setInterval(function(){
+
+    function tick() {
+      if (!state.session || state.session !== s || s.locked) return;
       var elapsed = Date.now() - s.cardStart;
       var remain = Math.max(0, totalMs - elapsed);
       var frac = remain / totalMs;
+
       if (fill){
         fill.style.width = (frac * 100) + "%";
         fill.classList.toggle("warn", frac <= 0.5 && frac > 0.2);
         fill.classList.toggle("danger", frac <= 0.2);
       }
       if (txt) txt.textContent = (remain / 1000).toFixed(1) + "s";
+
       if (remain <= 0){
-        clearInterval(s.timerId);
-        s.timerId = null;
+        s.animFrameId = null;
         onTimeout();
+      } else {
+        s.animFrameId = requestAnimationFrame(tick);
       }
-    }, 100);
+    }
+    s.animFrameId = requestAnimationFrame(tick);
   }
 
   var input = document.getElementById("typeInput");
@@ -729,6 +1332,7 @@ function onTimeout(){
   var s = state.session;
   if (s.locked) return;
   s.locked = true;
+  playSound("wrong");
   recordResult(false, true);
 }
 
@@ -737,6 +1341,7 @@ function onReveal(){
   if (s.locked) return;
   s.locked = true;
   stopTimer();
+  playSound("click");
   recordResult(false, false, true);
 }
 
@@ -747,6 +1352,8 @@ function handleInput(){
   var item = currentItem();
   var typed = input.value;
   var revealAll = s.phase === "learn";
+
+  playSound("click");
 
   var diffEl = document.getElementById("diffLine");
   if (diffEl) diffEl.innerHTML = renderDiff(typed, item.answer, revealAll);
@@ -774,17 +1381,28 @@ function handleInput(){
   if (isMatch(typed, item)){
     s.locked = true;
     stopTimer();
+    playSound("correct");
     recordResult(true, false);
   }
 }
 
 function handleKeydown(e){
+  if (e.key === "Escape") {
+    if (state.session) stopTimer();
+    state.session = null;
+    state.screen = "home";
+    renderRoot();
+    return;
+  }
+
   if (e.key !== "Enter") return;
   var s = state.session;
   if (s.locked) return;
   var input = document.getElementById("typeInput");
   var item = currentItem();
-  if (isMatch(input.value, item)) return; // handled by input event already
+  if (isMatch(input.value, item)) return;
+
+  playSound("wrong");
   if (s.phase === "learn"){
     var wordLine = document.getElementById("diffLine");
     if (wordLine){
@@ -792,7 +1410,7 @@ function handleKeydown(e){
       void wordLine.offsetWidth;
       wordLine.classList.add("wrong-flash");
     }
-    return; // learn has no fail state, just keep trying
+    return;
   }
   s.locked = true;
   stopTimer();
@@ -800,7 +1418,7 @@ function handleKeydown(e){
 }
 
 function renderDiff(typed, answer, revealRemainder){
-  if (!typed && !revealRemainder) return '<span class="diff-placeholder">start typing…</span><span class="caret"></span>';
+  if (!typed && !revealRemainder) return '<span class="diff-placeholder">start typing math…</span><span class="caret"></span>';
   var html = "";
   for (var i = 0; i < typed.length; i++){
     var ok = i < answer.length && typed[i] === answer[i];
@@ -845,7 +1463,7 @@ function recordResult(correct, timedOut, revealed){
     if (ansBox) ansBox.style.display = "block";
   }
 
-  var delay = correct ? 420 : 1100;
+  var delay = correct ? 400 : 1000;
   setTimeout(nextCard, delay);
 }
 
@@ -872,29 +1490,30 @@ function finishSession(){
   var message = "";
 
   if (s.phase === "learn"){
-    prog.learnedOnce = true;
     prog.phase = "practice";
     advanced = true;
-    message = "All " + total + " cards learned. Practice is now unlocked.";
+    message = "All " + total + " expressions learned. Practice phase is now unlocked!";
   } else if (s.phase === "practice"){
     prog.lastAccuracy = accuracy;
     if (accuracy >= PRACTICE_UNLOCK){
       prog.phase = "blitz";
       advanced = true;
-      message = "Accuracy cleared " + PRACTICE_UNLOCK + "%. Blitz is now unlocked.";
+      message = "Accuracy cleared " + PRACTICE_UNLOCK + "%! Blitz speed mode unlocked.";
     } else {
-      message = "Need " + PRACTICE_UNLOCK + "%+ accuracy to unlock Blitz — give it another pass.";
+      message = "Need " + PRACTICE_UNLOCK + "%+ accuracy to unlock Blitz — practice again!";
     }
   } else if (s.phase === "blitz"){
     prog.lastAccuracy = accuracy;
     if (s.bestStreakSession > prog.bestStreak) prog.bestStreak = s.bestStreakSession;
     if (accuracy >= MASTER_THRESHOLD){
       prog.mastered = true;
-      message = "Mastered — " + accuracy + "% accuracy in Blitz.";
+      message = "Mastered! " + accuracy + "% accuracy in Blitz mode.";
     } else {
       message = "Keep drilling Blitz to push accuracy past " + MASTER_THRESHOLD + "%.";
     }
   }
+
+  saveState();
 
   state.lastSummary = {
     catId: cat, phase: s.phase, total: total, correctCount: correctCount,
@@ -921,23 +1540,26 @@ function phaseClass(phase, mastered){
 }
 
 function renderHome(){
+  var part = state.activePart;
+  var catKeys = CATEGORY_ORDER[part];
+
   var tipsHtml = TIPS.map(function(t){
     return '<div class="tip-card"><div class="tip-key">' + escapeHtml(t.key) + '</div><div class="tip-body">' + escapeHtml(t.body) + "</div></div>";
   }).join("");
 
-  var cardsHtml = CATEGORY_ORDER.map(function(catId){
+  var cardsHtml = catKeys.map(function(catId){
     var meta = CATEGORY_META[catId];
-    var prog = state.progress[catId];
+    var prog = state.progress[catId] || { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
     var count = CONTENT[catId].length;
-    var pct = prog.mastered ? 100 : (prog.phase === "learn" ? 8 : prog.phase === "practice" ? (prog.lastAccuracy != null ? prog.lastAccuracy : 40) : (prog.lastAccuracy != null ? prog.lastAccuracy : 70));
+    var pct = prog.mastered ? 100 : (prog.phase === "learn" ? 10 : prog.phase === "practice" ? (prog.lastAccuracy != null ? prog.lastAccuracy : 40) : (prog.lastAccuracy != null ? prog.lastAccuracy : 75));
     var metaText = prog.mastered
       ? "best streak " + prog.bestStreak
       : prog.phase === "learn"
         ? count + " cards to learn"
-        : (prog.lastAccuracy != null ? prog.lastAccuracy + "% last round" : "not attempted yet");
+        : (prog.lastAccuracy != null ? prog.lastAccuracy + "% accuracy last round" : "unattempted");
 
     return (
-      '<button type="button" class="cat-card' + (prog.mastered ? " is-mastered" : "") + '" data-action="start-category" data-cat="' + catId + '">' +
+      '<button type="button" class="cat-card' + (prog.mastered ? " is-mastered" : "") + '" data-part="' + part + '" data-action="start-category" data-cat="' + catId + '">' +
         '<div class="cat-top">' +
           '<div class="cat-name">' + escapeHtml(meta.label) + '</div>' +
           '<div class="phase-pill ' + phaseClass(prog.phase, prog.mastered) + '">' + phaseLabel(prog.phase, prog.mastered) + '</div>' +
@@ -949,16 +1571,39 @@ function renderHome(){
     );
   }).join("");
 
+  var paceLabel = state.pace === 1.4 ? "Pace: Relaxed" : (state.pace === 0.7 ? "Pace: Speedrun" : "Pace: Standard");
+
   return (
     '<div class="topbar">' +
-      '<div class="brand"><span class="brand-mark">desmos<span class="dot">_</span>drill</span><span class="brand-sub">keystroke recall trainer</span></div>' +
-      '<div class="topbar-actions"><button class="icon-btn" data-action="toggle-theme" type="button">toggle theme</button></div>' +
+      '<div class="brand">' +
+        '<span class="brand-mark">desmos<span class="dot">_</span>master</span>' +
+        '<span class="brand-sub">keystroke recall & SAT math trainer</span>' +
+      '</div>' +
+      '<div class="topbar-actions">' +
+        '<button class="icon-btn" data-action="toggle-pace" type="button" title="Adjust dynamic timing pace">' + escapeHtml(paceLabel) + '</button>' +
+        '<button class="icon-btn" data-action="toggle-sound" type="button">' + (soundEnabled ? "🔊 Sound ON" : "🔇 Mute") + '</button>' +
+        '<button class="icon-btn" data-action="toggle-theme" type="button">🌓 Theme</button>' +
+      '</div>' +
     '</div>' +
+
+    '<div class="part-switcher">' +
+      '<button class="part-tab ' + (part === "master" ? "active" : "") + '" data-part="master" data-action="switch-part" type="button">' +
+        '<span>Desmos Master</span><span class="badge">Syntax & Speed</span>' +
+      '</button>' +
+      '<button class="part-tab ' + (part === "sat" ? "active" : "") + '" data-part="sat" data-action="switch-part" type="button">' +
+        '<span>SAT Math Desmos</span><span class="badge">SAT Hacks & Prep</span>' +
+      '</button>' +
+    '</div>' +
+
     '<details class="tips">' +
-      '<summary>Desmos keyboard behaviors worth knowing<span class="chev">›</span></summary>' +
+      '<summary>Desmos Keystroke & SAT Calculator Tips<span class="chev">›</span></summary>' +
       '<div class="tips-grid">' + tipsHtml + '</div>' +
     '</details>' +
-    '<div class="section-label">Categories</div>' +
+
+    '<div class="section-label">' +
+      '<span>' + (part === "master" ? "Desmos Master Syntax Categories" : "Digital SAT Desmos Strategy Categories") + '</span>' +
+      '<span style="font-family:var(--mono);font-size:12px;color:var(--text-faint);">' + catKeys.length + ' modules</span>' +
+    '</div>' +
     '<div class="cat-grid">' + cardsHtml + '</div>'
   );
 }
@@ -970,7 +1615,6 @@ function renderSessionScreen(){
   var item = currentItem();
   var meta = CATEGORY_META[s.catId];
   var phaseNames = { learn: "Learn", practice: "Practice", blitz: "Blitz" };
-  var timeLimit = s.phase === "learn" ? LEARN_TIME : (s.phase === "practice" ? PRACTICE_TIME : BLITZ_TIME);
 
   var dots = s.queue.map(function(_, idx){
     var cls = "dot";
@@ -983,29 +1627,29 @@ function renderSessionScreen(){
     ? '<div class="streak-badge"><span><span class="flame">▲</span> streak <b>' + s.currentStreak + '</b></span><span>best <b>' + s.bestStreakSession + '</b></span></div>'
     : "";
 
-  var timerHtml = timeLimit > 0
-    ? '<div class="timer-wrap"><div class="timer-row"><span>' + phaseNames[s.phase] + '</span><span id="timerText">' + timeLimit.toFixed(1) + 's</span></div>' +
+  var timerHtml = s.phase !== "learn"
+    ? '<div class="timer-wrap"><div class="timer-row"><span>' + phaseNames[s.phase] + ' — dynamic timer</span><span id="timerText">--</span></div>' +
       '<div class="timer-track"><div class="timer-fill" id="timerFill" style="width:100%"></div></div></div>'
-    : '<div class="timer-wrap"><div class="timer-row"><span>Learn — untimed</span><span>&nbsp;</span></div></div>';
+    : '<div class="timer-wrap"><div class="timer-row"><span>Learn — untimed keystroke drill</span><span>&nbsp;</span></div></div>';
 
   var answerHtml = s.phase === "learn"
     ? '<div class="breakdown" id="breakdown">' + renderBreakdown(item.answer) + '</div>'
     : '<div class="answer-shown" id="answerReveal" style="display:none">' + escapeHtml(item.answer) + "</div>";
 
-  var noteHtml = (s.phase === "learn" && item.note)
+  var noteHtml = item.note
     ? '<div class="note-box"><b>tip —</b> ' + escapeHtml(item.note) + "</div>"
     : "";
 
   var legendHtml = renderKeyLegend(s.catId);
 
   var revealBtn = s.phase !== "learn"
-    ? '<button type="button" class="btn btn-reveal" data-action="reveal">Reveal (counts as a miss)</button>'
+    ? '<button type="button" class="btn btn-reveal" data-action="reveal">Reveal (Space)</button>'
     : "";
 
   var html =
     '<div class="session">' +
       '<div class="session-head">' +
-        '<div class="session-cat"><button class="session-back" data-action="back-home" type="button">← categories</button><span>&nbsp;/&nbsp;' + escapeHtml(meta.label) + '</span></div>' +
+        '<div class="session-cat"><button class="session-back" data-action="back-home" type="button">← Categories</button><span>&nbsp;/&nbsp;' + escapeHtml(meta.label) + '</span></div>' +
         streakHtml +
       '</div>' +
       '<div class="progress-dots">' + dots + '</div>' +
@@ -1017,7 +1661,7 @@ function renderSessionScreen(){
         '<div class="type-stage" id="typeStage">' +
           '<input class="type-input" id="typeInput" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />' +
           '<div class="typed-preview is-empty" id="typedPreview">·</div>' +
-          '<div class="word-line" id="diffLine"><span class="diff-placeholder">start typing…</span><span class="caret"></span></div>' +
+          '<div class="word-line" id="diffLine"><span class="diff-placeholder">start typing math…</span><span class="caret"></span></div>' +
         '</div>' +
         noteHtml +
         legendHtml +
@@ -1046,7 +1690,7 @@ function renderSummary(){
           '<div class="stat-tile"><div class="stat-num">' + sum.total + '</div><div class="stat-label">cards</div></div>' +
           '<div class="stat-tile"><div class="stat-num">' + sum.avgTime.toFixed(1) + 's</div><div class="stat-label">avg / card</div></div>' +
           '<div class="stat-tile"><div class="stat-num">100%</div><div class="stat-label">complete</div></div>' +
-          '<div class="stat-tile"><div class="stat-num">→</div><div class="stat-label">practice</div></div>' +
+          '<div class="stat-tile"><div class="stat-num">Unlocked</div><div class="stat-label">practice</div></div>' +
         '</div>'
       )
     : (
@@ -1063,20 +1707,20 @@ function renderSummary(){
   var html =
     '<div class="summary">' +
       '<div class="phase-tag">' + phaseNames[sum.phase] + ' · ' + escapeHtml(meta.label) + '</div>' +
-      '<div class="summary-title">' + (sum.advanced ? "Round complete" : "Round complete") + '</div>' +
+      '<div class="summary-title">' + (sum.advanced ? "Round Passed!" : "Round Complete") + '</div>' +
       '<div class="summary-sub">' + escapeHtml(sum.message) + '</div>' +
       statsHtml +
       '<div class="summary-actions">' +
-        '<button class="btn" data-action="back-home" type="button">All categories</button>' +
+        '<button class="btn" data-action="back-home" type="button">All Categories</button>' +
         '<button class="btn" data-action="retry-phase" data-cat="' + sum.catId + '" type="button">' + retryLabel + '</button>' +
-        (sum.advanced ? '<button class="btn btn-primary" data-action="start-category" data-cat="' + sum.catId + '" type="button">Continue →</button>' : '') +
+        (sum.advanced ? '<button class="btn btn-primary" data-action="start-category" data-cat="' + sum.catId + '" type="button">Next Phase →</button>' : '') +
       '</div>' +
     '</div>';
 
   document.getElementById("root").innerHTML = html;
 }
 
-/* ============================== ROOT ROUTER ============================== */
+/* ============================== ROUTER ============================== */
 
 function renderRoot(){
   var root = document.getElementById("root");
@@ -1085,10 +1729,9 @@ function renderRoot(){
   } else if (state.screen === "summary"){
     renderSummary();
   }
-  // "session" screen is rendered by mountCard -> renderSessionScreen
 }
 
-/* ============================== EVENTS ============================== */
+/* ============================== EVENT LISTENERS ============================== */
 
 document.addEventListener("click", function(e){
   var stage = e.target.closest("#typeStage");
@@ -1101,11 +1744,19 @@ document.addEventListener("click", function(e){
   if (!el) return;
   var action = el.getAttribute("data-action");
 
-  if (action === "start-category"){
+  if (action === "switch-part"){
+    state.activePart = el.getAttribute("data-part");
+    saveState();
+    playSound("click");
+    renderRoot();
+  } else if (action === "start-category"){
+    playSound("click");
     startSession(el.getAttribute("data-cat"));
   } else if (action === "retry-phase"){
+    playSound("click");
     startSession(el.getAttribute("data-cat"));
   } else if (action === "back-home"){
+    playSound("click");
     if (state.session) stopTimer();
     state.session = null;
     state.screen = "home";
@@ -1113,11 +1764,32 @@ document.addEventListener("click", function(e){
   } else if (action === "reveal"){
     onReveal();
   } else if (action === "toggle-theme"){
+    playSound("click");
     var rootEl = document.documentElement;
     var cur = rootEl.getAttribute("data-theme");
-    var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    var effectiveDark = cur ? cur === "dark" : prefersDark;
-    rootEl.setAttribute("data-theme", effectiveDark ? "light" : "dark");
+    rootEl.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+  } else if (action === "toggle-sound"){
+    soundEnabled = !soundEnabled;
+    playSound("click");
+    renderRoot();
+  } else if (action === "toggle-pace"){
+    playSound("click");
+    if (state.pace === 1.0) state.pace = 0.7; // Speedrun
+    else if (state.pace === 0.7) state.pace = 1.4; // Relaxed
+    else state.pace = 1.0; // Standard
+    saveState();
+    renderRoot();
+  }
+});
+
+// Spacebar shortcut for reveal during sessions
+document.addEventListener("keydown", function(e){
+  if (e.code === "Space" && state.screen === "session" && state.session && state.session.phase !== "learn") {
+    var activeTag = document.activeElement ? document.activeElement.tagName : "";
+    if (activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
+      e.preventDefault();
+      onReveal();
+    }
   }
 });
 
@@ -1126,3 +1798,5 @@ renderRoot();
 
 })();
 </script>
+</body>
+</html>
