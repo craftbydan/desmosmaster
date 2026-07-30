@@ -128,6 +128,7 @@
       align-items: center;
       gap: 6px;
       transition: all 0.15s ease;
+      user-select: none;
     }
     .icon-btn:hover {
       color: var(--text);
@@ -155,7 +156,7 @@
       font-size: 15px;
       color: var(--text-dim);
       border-radius: 10px;
-      border: none;
+      border: 1px solid transparent;
       background: transparent;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -163,13 +164,14 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
+      user-select: none;
     }
     .part-tab:hover { color: var(--text); }
     .part-tab.active {
       background: var(--surface-2);
       color: var(--text);
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      border: 1px solid var(--border-strong);
+      border-color: var(--border-strong);
     }
     .part-tab.active[data-part="sat"] {
       border-color: var(--sat-accent);
@@ -206,6 +208,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      user-select: none;
     }
     .tips summary::-webkit-details-marker { display: none; }
     .tips summary::before { content: "⌨"; color: var(--accent); font-size: 16px; }
@@ -246,7 +249,7 @@
     }
     .cat-card {
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       border-radius: 16px;
       padding: 22px;
       display: flex;
@@ -259,17 +262,19 @@
       transition: all 0.15s ease;
       position: relative;
       overflow: hidden;
+      user-select: none;
     }
     .cat-card:hover {
       border-color: var(--border-strong);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      background: var(--surface-2);
     }
-    .cat-card:active { transform: scale(0.99); }
+    .cat-card:active { transform: scale(0.98); }
     .cat-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     
-    .cat-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .cat-name { font-family: var(--heading); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+    .cat-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; pointer-events: none; }
+    .cat-name { font-family: var(--heading); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; pointer-events: none; }
     .phase-pill {
       font-size: 11px;
       font-weight: 700;
@@ -279,16 +284,17 @@
       border-radius: 100px;
       border: 1px solid transparent;
       white-space: nowrap;
+      pointer-events: none;
     }
     .phase-pill.learn { background: var(--accent-dim); color: var(--accent-strong); }
     .phase-pill.practice { background: var(--warn-dim); color: var(--warn); }
     .phase-pill.blitz { background: var(--danger-dim); color: var(--danger); }
     .phase-pill.mastered { background: var(--success-dim); color: var(--success); border-color: transparent; }
 
-    .cat-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.45; flex: 1; }
-    .cat-meta { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-faint); font-family: var(--mono); }
-    .cat-bar { height: 6px; border-radius: 4px; background: var(--surface-2); overflow: hidden; margin-top: 4px; }
-    .cat-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s ease; }
+    .cat-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.45; flex: 1; pointer-events: none; }
+    .cat-meta { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-faint); font-family: var(--mono); pointer-events: none; }
+    .cat-bar { height: 6px; border-radius: 4px; background: var(--surface-2); overflow: hidden; margin-top: 4px; pointer-events: none; }
+    .cat-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s ease; pointer-events: none; }
     .cat-card[data-part="sat"] .cat-bar-fill { background: var(--sat-accent); }
     .cat-card.is-mastered .cat-bar-fill { background: var(--success); }
 
@@ -653,6 +659,7 @@
       background: var(--surface-2);
       color: var(--text-dim);
       transition: all 0.15s ease;
+      user-select: none;
     }
     .btn:hover { color: var(--text); border-color: var(--text-dim); }
     .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -925,7 +932,7 @@ var TIPS = [
 /* ============================== DYNAMIC TIMING ENGINE ============================== */
 
 function calculateAllowedTime(answer, phase, paceMultiplier) {
-  if (phase === "learn") return 0; // Untimed
+  if (phase === "learn") return 0;
   
   var charCount = answer.length;
   var sqrtCount = (answer.match(/sqrt/g) || []).length;
@@ -1008,7 +1015,7 @@ function escapeHtml(s){
 function renderMath(str){
   var i = 0;
   function captureGroup(){
-    i++; // skip {
+    i++;
     var depth = 1, start = i;
     while (depth > 0 && i < str.length){
       if (str[i] === "{") depth++;
@@ -1071,7 +1078,7 @@ function renderMath(str){
 function renderTypedPreview(str){
   var i = 0;
   function captureParenGroup(){
-    i++; // skip (
+    i++;
     var depth = 1, start = i;
     while (depth > 0 && i < str.length){
       if (str[i] === "(") depth++;
@@ -1285,12 +1292,11 @@ var state = {
   lastSummary: null
 };
 
-// 1. FIRST Initialize default progress for ALL category keys so none are ever undefined
+// Initialize default progress for ALL category keys
 Object.keys(CATEGORY_META).forEach(function(catId){
   state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
 });
 
-// 2. THEN merge saved progress on top of defaults
 function loadSavedState() {
   try {
     var raw = localStorage.getItem(STORAGE_KEY);
@@ -1340,9 +1346,53 @@ function isMatch(input, item){
   return false;
 }
 
+/* ============================== GLOBAL DISPATCH ACTION ============================== */
+
+window.dispatchAction = function(action, el, event) {
+  if (event && event.stopPropagation) event.stopPropagation();
+  
+  if (action === "start-category" || action === "retry-phase") {
+    var catId = el ? el.getAttribute("data-cat") : null;
+    if (catId) {
+      playSound("click");
+      startSession(catId);
+    }
+  } else if (action === "switch-part") {
+    var part = el ? el.getAttribute("data-part") : "master";
+    state.activePart = part;
+    saveState();
+    playSound("click");
+    renderRoot();
+  } else if (action === "back-home") {
+    playSound("click");
+    if (state.session) stopTimer();
+    state.session = null;
+    state.screen = "home";
+    renderRoot();
+  } else if (action === "reveal") {
+    onReveal();
+  } else if (action === "toggle-theme") {
+    playSound("click");
+    var cur = document.documentElement.getAttribute("data-theme");
+    document.documentElement.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+  } else if (action === "toggle-sound") {
+    soundEnabled = !soundEnabled;
+    playSound("click");
+    renderRoot();
+  } else if (action === "toggle-pace") {
+    playSound("click");
+    if (state.pace === 1.0) state.pace = 0.7;
+    else if (state.pace === 0.7) state.pace = 1.4;
+    else state.pace = 1.0;
+    saveState();
+    renderRoot();
+  }
+};
+
 /* ============================== SESSION ENGINE ============================== */
 
 function startSession(catId){
+  if (!catId) return;
   if (!state.progress[catId]) {
     state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
   }
@@ -1350,7 +1400,7 @@ function startSession(catId){
   var items = CONTENT[catId] || [];
   if (!items || items.length === 0) return;
 
-  var queue = shuffle(items).map(function(item){ return item; });
+  var queue = shuffle(items);
   state.session = {
     catId: catId,
     phase: phase,
@@ -1366,7 +1416,6 @@ function startSession(catId){
   };
   state.screen = "session";
   renderRoot();
-  mountCard();
 }
 
 function currentItem(){
@@ -1386,12 +1435,13 @@ function mountCard(){
   if (!s) return;
   s.locked = false;
   s.cardStart = Date.now();
-  renderSessionScreen();
-
+  
   var item = currentItem();
   if (!item) return;
   s.allowedTime = calculateAllowedTime(item.answer, s.phase, state.pace);
   
+  stopTimer();
+
   if (s.allowedTime > 0){
     var totalMs = s.allowedTime * 1000;
     var fill = document.getElementById("timerFill");
@@ -1666,7 +1716,7 @@ function renderHome(){
         : (prog.lastAccuracy != null ? prog.lastAccuracy + "% accuracy last round" : "unattempted");
 
     return (
-      '<button type="button" class="cat-card' + (prog.mastered ? " is-mastered" : "") + '" data-part="' + part + '" data-action="start-category" data-cat="' + catId + '">' +
+      '<div class="cat-card' + (prog.mastered ? " is-mastered" : "") + '" role="button" tabindex="0" data-part="' + part + '" data-action="start-category" data-cat="' + catId + '" onclick="window.dispatchAction(\'start-category\', this, event)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();window.dispatchAction(\'start-category\', this, event);}">' +
         '<div class="cat-top">' +
           '<div class="cat-name">' + escapeHtml(meta.label) + '</div>' +
           '<div class="phase-pill ' + phaseClass(prog.phase, prog.mastered) + '">' + phaseLabel(prog.phase, prog.mastered) + '</div>' +
@@ -1674,7 +1724,7 @@ function renderHome(){
         '<div class="cat-desc">' + escapeHtml(meta.blurb) + '</div>' +
         '<div class="cat-meta"><span>' + escapeHtml(metaText) + '</span></div>' +
         '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%"></div></div>' +
-      '</button>'
+      '</div>'
     );
   }).join("");
 
@@ -1687,17 +1737,17 @@ function renderHome(){
         '<span class="brand-sub">keystroke recall & SAT math trainer</span>' +
       '</div>' +
       '<div class="topbar-actions">' +
-        '<button class="icon-btn" data-action="toggle-pace" type="button" title="Adjust dynamic timing pace">' + escapeHtml(paceLabel) + '</button>' +
-        '<button class="icon-btn" data-action="toggle-sound" type="button">' + (soundEnabled ? "🔊 Sound ON" : "🔇 Mute") + '</button>' +
-        '<button class="icon-btn" data-action="toggle-theme" type="button">🌓 Theme</button>' +
+        '<button class="icon-btn" type="button" data-action="toggle-pace" onclick="window.dispatchAction(\'toggle-pace\', this, event)" title="Adjust dynamic timing pace">' + escapeHtml(paceLabel) + '</button>' +
+        '<button class="icon-btn" type="button" data-action="toggle-sound" onclick="window.dispatchAction(\'toggle-sound\', this, event)">' + (soundEnabled ? "🔊 Sound ON" : "🔇 Mute") + '</button>' +
+        '<button class="icon-btn" type="button" data-action="toggle-theme" onclick="window.dispatchAction(\'toggle-theme\', this, event)">🌓 Theme</button>' +
       '</div>' +
     '</div>' +
 
     '<div class="part-switcher">' +
-      '<button class="part-tab ' + (part === "master" ? "active" : "") + '" data-part="master" data-action="switch-part" type="button">' +
+      '<button class="part-tab ' + (part === "master" ? "active" : "") + '" data-part="master" data-action="switch-part" onclick="window.dispatchAction(\'switch-part\', this, event)" type="button">' +
         '<span>Desmos Master</span><span class="badge">Syntax & Speed</span>' +
       '</button>' +
-      '<button class="part-tab ' + (part === "sat" ? "active" : "") + '" data-part="sat" data-action="switch-part" type="button">' +
+      '<button class="part-tab ' + (part === "sat" ? "active" : "") + '" data-part="sat" data-action="switch-part" onclick="window.dispatchAction(\'switch-part\', this, event)" type="button">' +
         '<span>SAT Math Desmos</span><span class="badge">SAT Hacks & Prep</span>' +
       '</button>' +
     '</div>' +
@@ -1752,13 +1802,13 @@ function renderSessionScreen(){
   var legendHtml = renderKeyLegend(s.catId);
 
   var revealBtn = s.phase !== "learn"
-    ? '<button type="button" class="btn btn-reveal" data-action="reveal">Reveal (Space)</button>'
+    ? '<button type="button" class="btn btn-reveal" data-action="reveal" onclick="window.dispatchAction(\'reveal\', this, event)">Reveal (Space)</button>'
     : "";
 
   var html =
     '<div class="session">' +
       '<div class="session-head">' +
-        '<div class="session-cat"><button class="session-back" data-action="back-home" type="button">← Categories</button><span>&nbsp;/&nbsp;' + escapeHtml(meta.label) + '</span></div>' +
+        '<div class="session-cat"><button class="session-back" data-action="back-home" onclick="window.dispatchAction(\'back-home\', this, event)" type="button">← Categories</button><span>&nbsp;/&nbsp;' + escapeHtml(meta.label) + '</span></div>' +
         streakHtml +
       '</div>' +
       '<div class="progress-dots">' + dots + '</div>' +
@@ -1823,9 +1873,9 @@ function renderSummary(){
       '<div class="summary-sub">' + escapeHtml(sum.message) + '</div>' +
       statsHtml +
       '<div class="summary-actions">' +
-        '<button class="btn" data-action="back-home" type="button">All Categories</button>' +
-        '<button class="btn" data-action="retry-phase" data-cat="' + sum.catId + '" type="button">' + retryLabel + '</button>' +
-        (sum.advanced ? '<button class="btn btn-primary" data-action="start-category" data-cat="' + sum.catId + '" type="button">Next Phase →</button>' : '') +
+        '<button class="btn" data-action="back-home" onclick="window.dispatchAction(\'back-home\', this, event)" type="button">All Categories</button>' +
+        '<button class="btn" data-action="retry-phase" data-cat="' + sum.catId + '" onclick="window.dispatchAction(\'retry-phase\', this, event)" type="button">' + retryLabel + '</button>' +
+        (sum.advanced ? '<button class="btn btn-primary" data-action="start-category" data-cat="' + sum.catId + '" onclick="window.dispatchAction(\'start-category\', this, event)" type="button">Next Phase →</button>' : '') +
       '</div>' +
     '</div>';
 
@@ -1836,8 +1886,12 @@ function renderSummary(){
 
 function renderRoot(){
   var root = document.getElementById("root");
+  if (!root) return;
   if (state.screen === "home"){
     root.innerHTML = renderHome();
+  } else if (state.screen === "session"){
+    renderSessionScreen();
+    mountCard();
   } else if (state.screen === "summary"){
     renderSummary();
   }
@@ -1855,43 +1909,7 @@ document.addEventListener("click", function(e){
   var el = e.target.closest("[data-action]");
   if (!el) return;
   var action = el.getAttribute("data-action");
-
-  if (action === "switch-part"){
-    state.activePart = el.getAttribute("data-part");
-    saveState();
-    playSound("click");
-    renderRoot();
-  } else if (action === "start-category"){
-    playSound("click");
-    startSession(el.getAttribute("data-cat"));
-  } else if (action === "retry-phase"){
-    playSound("click");
-    startSession(el.getAttribute("data-cat"));
-  } else if (action === "back-home"){
-    playSound("click");
-    if (state.session) stopTimer();
-    state.session = null;
-    state.screen = "home";
-    renderRoot();
-  } else if (action === "reveal"){
-    onReveal();
-  } else if (action === "toggle-theme"){
-    playSound("click");
-    var rootEl = document.documentElement;
-    var cur = rootEl.getAttribute("data-theme");
-    rootEl.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
-  } else if (action === "toggle-sound"){
-    soundEnabled = !soundEnabled;
-    playSound("click");
-    renderRoot();
-  } else if (action === "toggle-pace"){
-    playSound("click");
-    if (state.pace === 1.0) state.pace = 0.7; // Speedrun
-    else if (state.pace === 0.7) state.pace = 1.4; // Relaxed
-    else state.pace = 1.0; // Standard
-    saveState();
-    renderRoot();
-  }
+  window.dispatchAction(action, el, e);
 });
 
 // Spacebar shortcut for reveal during sessions
