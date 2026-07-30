@@ -959,53 +959,6 @@ function calculateAllowedTime(answer, phase, paceMultiplier) {
 var PRACTICE_UNLOCK = 70;
 var MASTER_THRESHOLD = 80;
 
-/* ============================== SOUND SYNTHESIZER ============================== */
-var soundEnabled = true;
-var audioCtx = null;
-
-function playSound(type) {
-  if (!soundEnabled) return;
-  try {
-    if (!audioCtx) {
-      var AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) return;
-      audioCtx = new AudioContext();
-    }
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    var now = audioCtx.currentTime;
-    if (type === "correct") {
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(523.25, now);
-      osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-      osc.start(now);
-      osc.stop(now + 0.15);
-    } else if (type === "wrong") {
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(220, now);
-      osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
-      gain.gain.setValueAtTime(0.15, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-      osc.start(now);
-      osc.stop(now + 0.15);
-    } else if (type === "click") {
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(400, now);
-      gain.gain.setValueAtTime(0.03, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-      osc.start(now);
-      osc.stop(now + 0.04);
-    }
-  } catch(e) {}
-}
-
 /* ============================== MATH RENDERER ============================== */
 
 function escapeHtml(s){
@@ -1354,17 +1307,14 @@ window.dispatchAction = function(action, el, event) {
   if (action === "start-category" || action === "retry-phase") {
     var catId = el ? el.getAttribute("data-cat") : null;
     if (catId) {
-      playSound("click");
       startSession(catId);
     }
   } else if (action === "switch-part") {
     var part = el ? el.getAttribute("data-part") : "master";
     state.activePart = part;
     saveState();
-    playSound("click");
     renderRoot();
   } else if (action === "back-home") {
-    playSound("click");
     if (state.session) stopTimer();
     state.session = null;
     state.screen = "home";
@@ -1372,15 +1322,9 @@ window.dispatchAction = function(action, el, event) {
   } else if (action === "reveal") {
     onReveal();
   } else if (action === "toggle-theme") {
-    playSound("click");
     var cur = document.documentElement.getAttribute("data-theme");
     document.documentElement.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
-  } else if (action === "toggle-sound") {
-    soundEnabled = !soundEnabled;
-    playSound("click");
-    renderRoot();
   } else if (action === "toggle-pace") {
-    playSound("click");
     if (state.pace === 1.0) state.pace = 0.7;
     else if (state.pace === 0.7) state.pace = 1.4;
     else state.pace = 1.0;
@@ -1483,7 +1427,6 @@ function onTimeout(){
   var s = state.session;
   if (!s || s.locked) return;
   s.locked = true;
-  playSound("wrong");
   recordResult(false, true);
 }
 
@@ -1492,7 +1435,6 @@ function onReveal(){
   if (!s || s.locked) return;
   s.locked = true;
   stopTimer();
-  playSound("click");
   recordResult(false, false, true);
 }
 
@@ -1504,8 +1446,6 @@ function handleInput(){
   if (!item) return;
   var typed = input.value;
   var revealAll = s.phase === "learn";
-
-  playSound("click");
 
   var diffEl = document.getElementById("diffLine");
   if (diffEl) diffEl.innerHTML = renderDiff(typed, item.answer, revealAll);
@@ -1533,7 +1473,6 @@ function handleInput(){
   if (isMatch(typed, item)){
     s.locked = true;
     stopTimer();
-    playSound("correct");
     recordResult(true, false);
   }
 }
@@ -1554,7 +1493,6 @@ function handleKeydown(e){
   var item = currentItem();
   if (!item || isMatch(input.value, item)) return;
 
-  playSound("wrong");
   if (s.phase === "learn"){
     var wordLine = document.getElementById("diffLine");
     if (wordLine){
@@ -1738,7 +1676,6 @@ function renderHome(){
       '</div>' +
       '<div class="topbar-actions">' +
         '<button class="icon-btn" type="button" data-action="toggle-pace" onclick="window.dispatchAction(\'toggle-pace\', this, event)" title="Adjust dynamic timing pace">' + escapeHtml(paceLabel) + '</button>' +
-        '<button class="icon-btn" type="button" data-action="toggle-sound" onclick="window.dispatchAction(\'toggle-sound\', this, event)">' + (soundEnabled ? "🔊 Sound ON" : "🔇 Mute") + '</button>' +
         '<button class="icon-btn" type="button" data-action="toggle-theme" onclick="window.dispatchAction(\'toggle-theme\', this, event)">🌓 Theme</button>' +
       '</div>' +
     '</div>' +
