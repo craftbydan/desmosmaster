@@ -1,0 +1,1128 @@
+<meta charset="UTF-8">
+<title>Desmos Drill</title>
+<style>
+  :root{
+    --bg:#212226;
+    --bg-elevated:#26282c;
+    --surface:#2c2e31;
+    --surface-2:#323437;
+    --border:#3a3d42;
+    --border-strong:#4a4d53;
+    --text:#d1d0c5;
+    --text-dim:#646669;
+    --text-faint:#4a4c50;
+    --accent:#e2b714;
+    --accent-strong:#f5d354;
+    --accent-dim:rgba(226,183,20,0.14);
+    --warn:#e2b714;
+    --warn-dim:rgba(226,183,20,0.14);
+    --danger:#ca4754;
+    --danger-dim:rgba(202,71,84,0.14);
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+    --math: "STIX Two Text", "Cambria Math", Cambria, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  }
+  :root[data-theme="light"]{
+    --bg:#e5e5e0;
+    --bg-elevated:#eeeee9;
+    --surface:#f7f7f2;
+    --surface-2:#ffffff;
+    --border:#d6d6cf;
+    --border-strong:#c1c1b7;
+    --text:#232323;
+    --text-dim:#8b8b83;
+    --text-faint:#aeaea5;
+    --accent:#b8860b;
+    --accent-strong:#8f6a08;
+    --accent-dim:rgba(184,134,11,0.12);
+    --warn:#b8860b;
+    --warn-dim:rgba(184,134,11,0.12);
+    --danger:#c0392b;
+    --danger-dim:rgba(192,57,43,0.10);
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#e5e5e0;
+      --bg-elevated:#eeeee9;
+      --surface:#f7f7f2;
+      --surface-2:#ffffff;
+      --border:#d6d6cf;
+      --border-strong:#c1c1b7;
+      --text:#232323;
+      --text-dim:#8b8b83;
+      --text-faint:#aeaea5;
+      --accent:#b8860b;
+      --accent-strong:#8f6a08;
+      --accent-dim:rgba(184,134,11,0.12);
+      --warn:#b8860b;
+      --warn-dim:rgba(184,134,11,0.12);
+      --danger:#c0392b;
+      --danger-dim:rgba(192,57,43,0.10);
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  #root{max-width:1120px;margin:0 auto;padding:40px 32px 100px;}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:32px;gap:12px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:baseline;gap:12px;}
+  .brand-mark{font-family:var(--mono);font-weight:700;font-size:clamp(22px,2.4vw,30px);letter-spacing:-0.02em;}
+  .brand-mark .dot{color:var(--accent);}
+  .brand-sub{font-size:14px;color:var(--text-faint);letter-spacing:.02em;}
+  .topbar-actions{display:flex;gap:8px;}
+  .icon-btn{
+    background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+    border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer;font-family:var(--sans);
+  }
+  .icon-btn:hover{color:var(--text);border-color:var(--border-strong);}
+  .icon-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+
+  /* ---------- tips panel ---------- */
+  .tips{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:20px 24px;margin-bottom:28px;
+  }
+  .tips summary{cursor:pointer;font-size:15px;font-weight:600;color:var(--text-dim);list-style:none;display:flex;align-items:center;gap:10px;}
+  .tips summary::-webkit-details-marker{display:none;}
+  .tips summary::before{content:"⌨";color:var(--accent);font-size:15px;}
+  .tips summary .chev{margin-left:auto;color:var(--text-faint);font-size:13px;transition:transform .15s;}
+  .tips[open] summary .chev{transform:rotate(90deg);}
+  .tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px;}
+  .tip-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 15px;}
+  .tip-card .tip-key{font-family:var(--mono);font-size:14px;color:var(--accent);margin-bottom:5px;}
+  .tip-card .tip-body{font-size:14px;color:var(--text-dim);line-height:1.5;}
+
+  /* ---------- category grid ---------- */
+  .section-label{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);margin:0 0 14px 2px;font-weight:600;}
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:8px;}
+  .cat-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 22px 20px;
+    display:flex;flex-direction:column;gap:12px;cursor:pointer;text-align:left;font-family:var(--sans);color:var(--text);
+    transition:border-color .15s, transform .1s;
+  }
+  .cat-card:hover{border-color:var(--border-strong);}
+  .cat-card:active{transform:scale(0.995);}
+  .cat-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .cat-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .cat-name{font-weight:650;font-size:18px;letter-spacing:-0.01em;}
+  .phase-pill{
+    font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    padding:4px 10px;border-radius:100px;border:1px solid transparent;white-space:nowrap;
+  }
+  .phase-pill.learn{background:var(--accent-dim);color:var(--accent-strong);}
+  .phase-pill.practice{background:var(--warn-dim);color:var(--warn);}
+  .phase-pill.blitz{background:var(--danger-dim);color:var(--danger);}
+  .phase-pill.mastered{background:var(--surface-2);color:var(--text-dim);border-color:var(--border-strong);}
+  .cat-desc{font-size:14.5px;color:var(--text-dim);line-height:1.45;}
+  .cat-meta{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-faint);font-family:var(--mono);}
+  .cat-bar{height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:2px;}
+  .cat-bar-fill{height:100%;background:var(--accent);border-radius:3px;}
+  .cat-card.is-mastered .cat-bar-fill{background:var(--text-faint);}
+
+  /* ---------- session screen ---------- */
+  .session{display:flex;flex-direction:column;align-items:center;gap:26px;}
+  .session-head{width:100%;max-width:720px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .session-cat{font-size:15px;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
+  .session-back{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:15px;padding:4px 2px;font-family:var(--sans);}
+  .session-back:hover{color:var(--text);}
+  .streak-badge{
+    font-family:var(--mono);font-size:15px;color:var(--text-dim);display:flex;gap:16px;align-items:center;
+  }
+  .streak-badge b{color:var(--text);font-weight:700;}
+  .streak-badge .flame{color:var(--warn);}
+
+  .progress-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:620px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--border-strong);}
+  .dot.done-ok{background:var(--accent);}
+  .dot.done-bad{background:var(--danger);}
+  .dot.current{background:var(--text);transform:scale(1.3);}
+
+  .timer-wrap{width:100%;max-width:620px;}
+  .timer-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:14px;color:var(--text-faint);margin-bottom:7px;}
+  .timer-track{height:7px;border-radius:4px;background:var(--surface-2);overflow:hidden;}
+  .timer-fill{height:100%;width:100%;background:var(--accent);border-radius:4px;transition:width .1s linear, background-color .2s;}
+  .timer-fill.warn{background:var(--warn);}
+  .timer-fill.danger{background:var(--danger);animation:pulse 0.6s ease-in-out infinite;}
+  @media (prefers-reduced-motion: reduce){ .timer-fill.danger{animation:none;} }
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+
+  .card{
+    width:100%;max-width:760px;background:var(--surface);border:1px solid var(--border);
+    border-radius:20px;padding:56px 48px 40px;display:flex;flex-direction:column;align-items:center;gap:30px;
+    transition:border-color .2s;
+  }
+  .card.state-correct{border-color:var(--accent);}
+  .card.state-wrong{border-color:var(--danger);}
+
+  .phase-tag{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--text-faint);font-weight:700;display:flex;align-items:center;gap:10px;}
+  .diff-pill{font-size:12px;letter-spacing:.06em;padding:3px 10px;border-radius:100px;border:1px solid var(--border-strong);}
+  .diff-pill.easy{color:var(--text-dim);}
+  .diff-pill.medium{color:var(--warn);border-color:transparent;background:var(--warn-dim);}
+  .diff-pill.hard{color:var(--danger);border-color:transparent;background:var(--danger-dim);}
+  .prompt{font-family:var(--math);font-size:clamp(42px,6.2vw,68px);font-weight:500;color:var(--text);text-align:center;line-height:1.3;user-select:none;min-height:1.4em;display:flex;align-items:center;justify-content:center;}
+
+  .answer-shown{
+    font-family:var(--mono);font-size:19px;color:var(--accent-strong);background:var(--accent-dim);
+    border:1px solid transparent;border-radius:10px;padding:10px 18px;letter-spacing:.01em;
+  }
+
+  .breakdown{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;max-width:660px;}
+  .tok{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:10px;
+    padding:10px 13px 8px;min-width:32px;transition:border-color .15s, background-color .15s, opacity .2s;
+  }
+  .tok-char{font-family:var(--mono);font-size:20px;color:var(--text);white-space:pre;}
+  .tok-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-faint);white-space:nowrap;}
+  .tok-arrow{color:var(--text-faint);font-size:16px;align-self:center;opacity:.5;}
+  .tok.is-active{border-color:var(--accent);background:var(--accent-dim);}
+  .tok.is-active .tok-char{color:var(--accent-strong);font-weight:700;}
+  .tok.is-active .tok-label{color:var(--accent);}
+  .tok.is-done{opacity:.32;}
+  .tok-fn .tok-char{color:var(--accent-strong);}
+
+  .key-legend{
+    display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:center;max-width:620px;
+  }
+  .key-legend-title{
+    font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-faint);margin-right:2px;
+  }
+  .legend-chip{
+    display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);
+    border-radius:8px;padding:5px 12px;
+  }
+  .legend-chip b{font-family:var(--mono);color:var(--text);font-size:16px;font-weight:600;}
+  .legend-chip i{font-style:normal;font-size:11.5px;color:var(--text-faint);white-space:nowrap;}
+
+  .type-stage{width:100%;display:flex;flex-direction:column;gap:16px;align-items:center;cursor:text;position:relative;}
+  .type-input{
+    position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;border:none;padding:0;margin:0;
+  }
+
+  .typed-preview{
+    font-family:var(--math);font-size:clamp(28px,4.2vw,36px);font-weight:500;min-height:1.3em;text-align:center;
+    color:var(--accent-strong);letter-spacing:.01em;display:flex;align-items:center;justify-content:center;
+    flex-wrap:wrap;opacity:.9;
+  }
+  .typed-preview.is-empty{opacity:.35;}
+
+  .word-line{
+    font-family:var(--mono);font-size:clamp(28px,4.4vw,38px);min-height:1.5em;text-align:center;letter-spacing:.02em;
+    display:flex;justify-content:center;flex-wrap:wrap;font-weight:500;
+  }
+  .diff-ch{white-space:pre;}
+  .diff-ok{color:var(--text);}
+  .diff-bad{color:var(--danger);text-decoration:underline;text-decoration-color:var(--danger);text-underline-offset:3px;}
+  .diff-rest{color:var(--text-faint);white-space:pre;}
+  .diff-placeholder{color:var(--text-faint);font-style:normal;font-size:20px;}
+  .caret{
+    display:inline-block;width:3px;background:var(--accent);margin-left:2px;
+    animation:caret-blink 1s step-end infinite;
+  }
+  @media (prefers-reduced-motion: reduce){ .caret{animation:none;} }
+  @keyframes caret-blink{0%,100%{opacity:1;}50%{opacity:0;}}
+  .word-line.wrong-flash{animation:shake .28s ease;}
+  @media (prefers-reduced-motion: reduce){ .word-line.wrong-flash{animation:none;} }
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-6px);}
+    75%{transform:translateX(6px);}
+  }
+
+  .note-box{
+    max-width:600px;background:var(--warn-dim);border:1px solid transparent;border-radius:10px;
+    padding:12px 17px;font-size:14.5px;color:var(--warn);line-height:1.5;text-align:center;
+  }
+  .note-box b{font-family:var(--mono);}
+
+  .card-actions{display:flex;gap:12px;}
+  .btn{
+    font-family:var(--sans);font-size:15px;font-weight:600;border-radius:10px;padding:11px 22px;cursor:pointer;
+    border:1px solid var(--border-strong);background:var(--surface-2);color:var(--text-dim);
+  }
+  .btn:hover{color:var(--text);}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .btn-reveal{color:var(--danger);border-color:transparent;background:var(--danger-dim);}
+  .btn-primary{background:var(--accent);color:#08130f;border-color:transparent;}
+  .btn-primary:hover{background:var(--accent-strong);color:#08130f;}
+
+  .feedback-tag{font-family:var(--mono);font-size:15px;font-weight:600;min-height:1.2em;}
+  .feedback-tag.ok{color:var(--accent);}
+  .feedback-tag.bad{color:var(--danger);}
+
+  /* ---------- summary ---------- */
+  .summary{width:100%;max-width:660px;margin:0 auto;display:flex;flex-direction:column;gap:26px;align-items:center;text-align:center;}
+  .summary-title{font-size:30px;font-weight:700;letter-spacing:-0.01em;}
+  .summary-sub{font-size:16px;color:var(--text-dim);max-width:460px;line-height:1.55;}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;}
+  .stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 10px;}
+  .stat-num{font-family:var(--mono);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .stat-label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin-top:6px;}
+  .summary-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+
+  @media (max-width:640px){
+    .stat-grid{grid-template-columns:repeat(2,1fr);}
+    .card{padding:40px 24px 30px;}
+    .prompt{font-size:clamp(30px,9vw,44px);}
+  }
+
+  /* ---------- math markup ---------- */
+  .mx-sup{font-size:0.6em;font-weight:600;position:relative;top:-0.5em;line-height:0;}
+  .mx-sub{font-size:0.6em;position:relative;top:0.28em;line-height:0;}
+  .mx-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.1;}
+  .mx-frac .mx-num, .mx-frac .mx-den{display:block;padding:0 4px;}
+  .mx-frac .mx-num{border-bottom:1.5px solid currentColor;padding-bottom:2px;}
+  .mx-frac .mx-den{padding-top:2px;}
+  .mx-sqrt{display:inline-flex;align-items:flex-start;margin:0 2px;}
+  .mx-radical-sign{transform:scaleY(1.15) translateY(1px);margin-right:1px;}
+  .mx-radicand{border-top:1.5px solid currentColor;padding:0 3px;}
+  .mx-cases{display:inline-flex;align-items:center;vertical-align:middle;margin-left:2px;}
+  .mx-brace{font-size:1.7em;line-height:1;margin-right:6px;font-weight:300;transform:scaleY(1.3);}
+  .mx-case-rows{display:flex;flex-direction:column;gap:2px;text-align:left;}
+  .mx-case-row{display:flex;gap:10px;font-size:0.62em;align-items:baseline;}
+  .mx-case-val{min-width:2.2em;}
+  .mx-case-cond{color:var(--text-dim);}
+</style>
+
+<div id="root"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================== CONTENT ============================== */
+
+var CATEGORY_META = {
+  exp:       { label: "Exponents & Operations", blurb: "Powers, coefficients, implicit multiplication." },
+  roots:     { label: "Roots",                  blurb: "Radicals, nested roots, nudging past auto-parens." },
+  frac:      { label: "Fractions",               blurb: "Stacked fractions and exiting the denominator." },
+  trig:      { label: "Trig & Logs",             blurb: "sin/cos/tan, log, ln, and log with a base." },
+  piecewise: { label: "Piecewise Functions",     blurb: "Desmos's { condition : value } syntax." },
+  combined:  { label: "Combined / Real-World",   blurb: "Circles, parabolas, transforms — everything at once." }
+};
+
+var CATEGORY_ORDER = ["exp","roots","frac","trig","piecewise","combined"];
+
+var CONTENT = {
+
+  exp: [
+    { display:"x^{2}",                answer:"x^2", difficulty:"easy" },
+    { display:"2x^{3}+1",             answer:"2x^3+1", difficulty:"easy" },
+    { display:"x^{2}+3x-5",           answer:"x^2+3x-5", difficulty:"medium" },
+    { display:"(x+1)^{2}",            answer:"(x+1)^2", difficulty:"easy" },
+    { display:"3x^{2}y",              answer:"3x^2y", acceptableVariants:["3*x^2*y"], difficulty:"easy" },
+    { display:"5x^{4}-2x^{2}",        answer:"5x^4-2x^2", difficulty:"medium" },
+    { display:"2(x+3)^{2}",           answer:"2(x+3)^2", acceptableVariants:["2*(x+3)^2"], difficulty:"medium" },
+    { display:"x^{2}+y^{2}",          answer:"x^2+y^2", difficulty:"easy" },
+    { display:"4x^{2}-9",             answer:"4x^2-9", difficulty:"medium" },
+    { display:"x^{4}+x^{2}+1",        answer:"x^4+x^2+1", difficulty:"medium" },
+    { display:"-x^{2}",               answer:"-x^2", difficulty:"easy" },
+    { display:"(2x)^{2}",             answer:"(2x)^2", difficulty:"easy" },
+    { display:"x^{2}y^{3}",           answer:"x^2y^3", acceptableVariants:["x^2*y^3"], difficulty:"medium" },
+    { display:"10^{x}",               answer:"10^x", difficulty:"easy" },
+    { display:"x^{100}+5", answer:"x^100+5", difficulty:"hard",
+      note:"Digits keep extending the exponent box. Press → after the 100 to step back down to the baseline before typing +5." },
+    { display:"3(x-2)^{2}+4x-7",      answer:"3(x-2)^2+4x-7", difficulty:"hard" }
+  ],
+
+  roots: [
+    { display:"sqrt{x}",                         answer:"sqrt(x)", difficulty:"easy" },
+    { display:"sqrt{x^{2}+1}",                    answer:"sqrt(x^2+1)", difficulty:"medium" },
+    { display:"sqrt{25}",                          answer:"sqrt(25)", difficulty:"easy" },
+    { display:"sqrt{x}+3", answer:"sqrt(x)+3", difficulty:"medium",
+      note:"sqrt( opens a radical with its closing paren already placed. Type the argument, then → to exit before +3." },
+    { display:"sqrt{sqrt{x}}",                     answer:"sqrt(sqrt(x))", difficulty:"medium" },
+    { display:"2sqrt{x}",                          answer:"2sqrt(x)", acceptableVariants:["2*sqrt(x)"], difficulty:"easy" },
+    { display:"sqrt{x}sqrt{y}",                    answer:"sqrt(x)sqrt(y)", acceptableVariants:["sqrt(x)*sqrt(y)"], difficulty:"medium" },
+    { display:"sqrt{x-1}",                         answer:"sqrt(x-1)", difficulty:"easy" },
+    { display:"sqrt{(x+1)^{2}+(y-2)^{2}}",         answer:"sqrt((x+1)^2+(y-2)^2)", difficulty:"hard" },
+    { display:"x+sqrt{y}",                         answer:"x+sqrt(y)", difficulty:"easy" },
+    { display:"sqrt{4x}",                          answer:"sqrt(4x)", difficulty:"easy" },
+    { display:"sqrt{x^{2}-4}",                     answer:"sqrt(x^2-4)", difficulty:"medium" },
+    { display:"-sqrt{x}",                          answer:"-sqrt(x)", difficulty:"easy" },
+    { display:"sqrt{x}+sqrt{y}",                   answer:"sqrt(x)+sqrt(y)", difficulty:"medium" },
+    { display:"sqrt{16x^{2}}",                     answer:"sqrt(16x^2)", difficulty:"medium" },
+    { display:"sqrt{x^{2}+sqrt{x+1}}",             answer:"sqrt(x^2+sqrt(x+1))", difficulty:"hard" }
+  ],
+
+  frac: [
+    { display:"frac{x}{y}",                        answer:"x/y", difficulty:"easy" },
+    { display:"frac{x+1}{y-2}",                     answer:"(x+1)/(y-2)", difficulty:"medium" },
+    { display:"frac{1}{2}x+3", answer:"1/2x+3", difficulty:"medium",
+      note:"After typing the denominator 2, press → to climb out of the fraction — otherwise x+3 lands inside the denominator." },
+    { display:"frac{x^{2}+1}{x-1}",                 answer:"(x^2+1)/(x-1)", difficulty:"medium" },
+    { display:"3+frac{1}{x}",                       answer:"3+1/x", difficulty:"easy" },
+    { display:"frac{x+y}{2}",                       answer:"(x+y)/2", difficulty:"easy" },
+    { display:"frac{1}{x^{2}}",                     answer:"1/x^2", difficulty:"easy" },
+    { display:"frac{sqrt{x}}{2}",                   answer:"sqrt(x)/2", difficulty:"medium" },
+    { display:"frac{x}{frac{y}{z}}", answer:"x/(y/z)", difficulty:"hard",
+      note:"For a fraction inside a fraction, wrap the inner one in parens rather than arrowing through two denominators." },
+    { display:"frac{2x+1}{3}-frac{x}{4}",           answer:"(2x+1)/3-x/4", difficulty:"hard" },
+    { display:"frac{5}{x+2}",                       answer:"5/(x+2)", difficulty:"easy" },
+    { display:"frac{x-3}{x+3}",                     answer:"(x-3)/(x+3)", difficulty:"medium" },
+    { display:"frac{x^{2}-4}{x+2}-frac{1}{x}",      answer:"(x^2-4)/(x+2)-1/x", difficulty:"hard" }
+  ],
+
+  trig: [
+    { display:"sin{x}",         answer:"sin(x)", difficulty:"easy" },
+    { display:"cos{x}",         answer:"cos(x)", difficulty:"easy" },
+    { display:"tan{x}",         answer:"tan(x)", difficulty:"easy" },
+    { display:"log{x}",         answer:"log(x)", acceptableVariants:["log_{10}(x)"], difficulty:"easy" },
+    { display:"ln{x}",          answer:"ln(x)", difficulty:"easy" },
+    { display:"sin{2x}+1",      answer:"sin(2x)+1", difficulty:"medium" },
+    { display:"cos{x}^{2}",     answer:"cos(x)^2", difficulty:"medium" },
+    { display:"log{x^{2}+1}",   answer:"log(x^2+1)", difficulty:"medium" },
+    { display:"2sin{x}-1",      answer:"2sin(x)-1", acceptableVariants:["2*sin(x)-1"], difficulty:"medium" },
+    { display:"sin{x}+cos{x}",  answer:"sin(x)+cos(x)", difficulty:"medium" },
+    { display:"e^{x}+1", answer:"e^x+1", difficulty:"medium",
+      note:"Type the exponent, then → to drop back to the baseline before continuing with +1." },
+    { display:"log_{2}{x}", answer:"log_2(x)", difficulty:"hard",
+      note:"log then _ opens the base slot. Type 2, then → to exit the subscript before the parenthesis." },
+    { display:"sin{x}cos{x}",   answer:"sin(x)cos(x)", acceptableVariants:["sin(x)*cos(x)"], difficulty:"medium" },
+    { display:"tan{3x}",        answer:"tan(3x)", difficulty:"easy" },
+    { display:"ln{x}+ln{y}",    answer:"ln(x)+ln(y)", difficulty:"medium" },
+    { display:"2sin{3x-1}+cos{x}^{2}", answer:"2sin(3x-1)+cos(x)^2", difficulty:"hard" }
+  ],
+
+  piecewise: [
+    { display:"cases{x<0|-1;x>=0|1}",                       answer:"{x<0:-1,x>=0:1}", difficulty:"easy",
+      note:"Each comma inside the braces starts a new piece; Tab jumps from the condition slot to the value slot." },
+    { display:"cases{x<0|-x;x>=0|x}",                        answer:"{x<0:-x,x>=0:x}", difficulty:"easy" },
+    { display:"cases{x>0|1;x<=0|-1}",                         answer:"{x>0:1,x<=0:-1}", difficulty:"easy" },
+    { display:"cases{-1<=x<=1|x;x<-1|-1;x>1|1}", answer:"{-1<=x<=1:x,x<-1:-1,x>1:1}", difficulty:"hard",
+      note:"Desmos accepts compound inequalities like -1<=x<=1 directly as one condition — no 'and' needed." },
+    { display:"cases{x<1|1;x<2|2;x<3|3}",                     answer:"{x<1:1,x<2:2,x<3:3}", difficulty:"medium" },
+    { display:"cases{0<=x<=5|x^{2}}", answer:"{0<=x<=5:x^2}", difficulty:"medium",
+      note:"A single condition with no other piece leaves the function undefined outside that domain — that's expected." },
+    { display:"cases{x<0|0;x>=0|x^{2}}",                      answer:"{x<0:0,x>=0:x^2}", difficulty:"easy" },
+    { display:"cases{x<2|x+1;x>=2|5}",                        answer:"{x<2:x+1,x>=2:5}", difficulty:"medium" },
+    { display:"cases{x<=0|-x^{2};x>0|x^{2}}",                 answer:"{x<=0:-x^2,x>0:x^2}", difficulty:"medium" },
+    { display:"cases{-2<x<2|4-x^{2}}",                        answer:"{-2<x<2:4-x^2}", difficulty:"medium" },
+    { display:"cases{x<-2|-2;-2<=x<=2|x;x>2|2}", answer:"{x<-2:-2,-2<=x<=2:x,x>2:2}", difficulty:"hard" }
+  ],
+
+  combined: [
+    { display:"x^{2}+y^{2}=25",                    answer:"x^2+y^2=25", difficulty:"easy" },
+    { display:"(x-2)^{2}+(y+3)^{2}=16",             answer:"(x-2)^2+(y+3)^2=16", difficulty:"medium" },
+    { display:"y=2(x-1)^{2}+3",                     answer:"y=2(x-1)^2+3", difficulty:"medium" },
+    { display:"sqrt{(x-1)^{2}+(y-2)^{2}}=5",        answer:"sqrt((x-1)^2+(y-2)^2)=5", difficulty:"hard" },
+    { display:"y=e^{-x^{2}}", answer:"y=e^(-x^2)", difficulty:"hard",
+      note:"Typing ( right after ^ gives a literal parenthesized exponent instead of the auto-sized box — handy for grouped exponents like this." },
+    { display:"y=frac{x^{2}-1}{x+2}",               answer:"y=(x^2-1)/(x+2)", difficulty:"medium" },
+    { display:"y=log{x^{2}+1}",                      answer:"y=ln(x^2+1)", difficulty:"medium" },
+    { display:"frac{x^{2}}{9}+frac{y^{2}}{4}=1",     answer:"x^2/9+y^2/4=1", difficulty:"medium" },
+    { display:"y=sqrt{x}sin{x}",                     answer:"y=sqrt(x)sin(x)", acceptableVariants:["y=sqrt(x)*sin(x)"], difficulty:"medium" },
+    { display:"y=-2sqrt{x-3}+1",                     answer:"y=-2sqrt(x-3)+1", difficulty:"medium" },
+    { display:"y=3sin{2(x-1)}+frac{sqrt{x}}{2}",     answer:"y=3sin(2(x-1))+sqrt(x)/2", difficulty:"hard" }
+  ]
+};
+
+var TIPS = [
+  { key:"→ exits boxes", body:"Arrow keys step out of a fraction, exponent, radical, or subscript instead of clicking outside it." },
+  { key:"sqrt( auto-closes",  body:"Typing sqrt( places the closing paren for you — type the argument, then → to move past it." },
+  { key:"Tab jumps blanks",   body:"In piecewise and multi-part expressions, Tab moves the cursor to the next empty slot." },
+  { key:"^( for literal parens", body:"Pressing ( right after ^ groups the exponent explicitly — useful for e^(-x^2)-style terms." }
+];
+
+var LEARN_TIME = 0;      // untimed
+var PRACTICE_TIME = 18;  // seconds
+var BLITZ_TIME = 6;      // seconds
+var PRACTICE_UNLOCK = 70;  // % accuracy to unlock blitz
+var MASTER_THRESHOLD = 80; // % accuracy in blitz to mark mastered
+
+/* ============================== MATH RENDERER ============================== */
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>]/g, function(c){ return c==="&"?"&amp;":c==="<"?"&lt;":"&gt;"; });
+}
+
+function renderMath(str){
+  var i = 0;
+  function captureGroup(){
+    i++; // skip {
+    var depth = 1, start = i;
+    while (depth > 0 && i < str.length){
+      if (str[i] === "{") depth++;
+      else if (str[i] === "}") depth--;
+      i++;
+    }
+    return str.slice(start, i - 1);
+  }
+  function token(){
+    if (str.startsWith("sqrt{", i)){
+      i += 4;
+      var inner = captureGroup();
+      return '<span class="mx-sqrt"><span class="mx-radical-sign">√</span><span class="mx-radicand">' + renderMath(inner) + '</span></span>';
+    }
+    if (str.startsWith("frac{", i)){
+      i += 4;
+      var num = captureGroup();
+      var den = captureGroup();
+      return '<span class="mx-frac"><span class="mx-num">' + renderMath(num) + '</span><span class="mx-den">' + renderMath(den) + '</span></span>';
+    }
+    if (str.startsWith("sin{", i) || str.startsWith("cos{", i) || str.startsWith("tan{", i) || str.startsWith("log{", i) || str.startsWith("ln{", i)){
+      var fn = str.slice(i, i+3);
+      i += 3;
+      var arg = captureGroup();
+      return fn + "(" + renderMath(arg) + ")";
+    }
+    if (str.startsWith("cases{", i)){
+      i += 5;
+      var raw = captureGroup();
+      var rows = raw.split(";").map(function(seg){
+        var parts = seg.split("|");
+        var cond = parts[0], val = parts[1];
+        return '<span class="mx-case-row"><span class="mx-case-val">' + renderMath(val) + '</span><span class="mx-case-cond">' + renderMath(cond) + '</span></span>';
+      }).join("");
+      return '<span class="mx-cases"><span class="mx-brace">{</span><span class="mx-case-rows">' + rows + '</span></span>';
+    }
+    if (str[i] === "^"){
+      i++;
+      var sup = str[i] === "{" ? renderMath(captureGroup()) : escapeHtml(str[i++]);
+      return '<sup class="mx-sup">' + sup + '</sup>';
+    }
+    if (str[i] === "_"){
+      i++;
+      var sub = str[i] === "{" ? renderMath(captureGroup()) : escapeHtml(str[i++]);
+      return '<sub class="mx-sub">' + sub + '</sub>';
+    }
+    var ch = str[i]; i++;
+    return escapeHtml(ch);
+  }
+  var out = "";
+  while (i < str.length) out += token();
+  return out;
+}
+
+/* Renders the user's raw typed Desmos-style string (real ^, _, sqrt(, parens)
+   as live visual math, so typing feels like watching Desmos's own input bar. */
+function renderTypedPreview(str){
+  var i = 0;
+  function captureParenGroup(){
+    i++; // skip (
+    var depth = 1, start = i;
+    while (depth > 0 && i < str.length){
+      if (str[i] === "(") depth++;
+      else if (str[i] === ")") depth--;
+      i++;
+    }
+    return str.slice(start, depth === 0 ? i - 1 : i);
+  }
+  function captureRun(){
+    var start = i;
+    while (i < str.length && /[A-Za-z0-9]/.test(str[i])) i++;
+    return str.slice(start, i);
+  }
+  function token(){
+    if (str.startsWith("sqrt(", i)){
+      i += 4;
+      var inner = captureParenGroup();
+      return '<span class="mx-sqrt"><span class="mx-radical-sign">√</span><span class="mx-radicand">' + renderTypedPreview(inner) + '</span></span>';
+    }
+    if (str[i] === "^"){
+      i++;
+      if (i >= str.length) return "^";
+      if (str[i] === "(") return '<sup class="mx-sup">' + renderTypedPreview(captureParenGroup()) + '</sup>';
+      var run = captureRun();
+      return run ? '<sup class="mx-sup">' + escapeHtml(run) + '</sup>' : "^";
+    }
+    if (str[i] === "_"){
+      i++;
+      if (i >= str.length) return "_";
+      if (str[i] === "(") return '<sub class="mx-sub">' + renderTypedPreview(captureParenGroup()) + '</sub>';
+      var run2 = captureRun();
+      return run2 ? '<sub class="mx-sub">' + escapeHtml(run2) + '</sub>' : "_";
+    }
+    var ch = str[i]; i++;
+    return escapeHtml(ch);
+  }
+  var out = "";
+  while (i < str.length) out += token();
+  return out;
+}
+
+/* ============================== KEYSTROKE BREAKDOWN & KEY GUIDE ============================== */
+
+var KEY_LABELS = {
+  "^": "power · ⇧ 6",
+  "_": "subscript · ⇧ -",
+  "/": "divide",
+  "*": "multiply · ⇧ 8",
+  "+": "plus",
+  "-": "minus",
+  "(": "open · ⇧ 9",
+  ")": "close · ⇧ 0",
+  "{": "open piece · ⇧ [",
+  "}": "close piece · ⇧ ]",
+  "<=": "≤ · ⇧ , then =",
+  ">=": "≥ · ⇧ . then =",
+  "<": "less than · ⇧ ,",
+  ">": "greater than · ⇧ .",
+  "=": "equals",
+  ":": "colon · ⇧ ;",
+  ",": "comma"
+};
+var FN_NAMES = ["sqrt","sin","cos","tan","log","ln"];
+
+function classifyToken(t){
+  if (FN_NAMES.indexOf(t) !== -1) return { kind:"fn", label:"function" };
+  if (/^\d+$/.test(t)) return { kind:"num", label:"number" };
+  if (/^[A-Za-z]$/.test(t)) return { kind:"var", label:"variable" };
+  if (KEY_LABELS[t]) return { kind:"key", label:KEY_LABELS[t] };
+  return { kind:"other", label:"" };
+}
+
+function tokenizeAnswer(str){
+  var re = /sqrt|sin|cos|tan|log|ln|<=|>=|\d+|[A-Za-z]|./g;
+  var m, tokens = [];
+  while ((m = re.exec(str))){
+    tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
+  }
+  return tokens;
+}
+
+function renderBreakdown(answer){
+  var tokens = tokenizeAnswer(answer);
+  var chips = tokens.map(function(tok){
+    var info = classifyToken(tok.text);
+    return '<div class="tok tok-' + info.kind + '" data-start="' + tok.start + '" data-end="' + tok.end + '">' +
+      '<div class="tok-char">' + escapeHtml(tok.text) + '</div>' +
+      (info.label ? '<div class="tok-label">' + escapeHtml(info.label) + '</div>' : '') +
+    '</div>';
+  }).join('<div class="tok-arrow">›</div>');
+  return chips;
+}
+
+var CATEGORY_KEYS = {
+  exp:       ["^","(",")","-"],
+  roots:     ["(",")","-"],
+  frac:      ["/","(",")","-"],
+  trig:      ["(",")","_","^"],
+  piecewise: ["{","}",":","<",">","-"],
+  combined:  ["^","(",")","/","_","{","}","<",">","=","-"]
+};
+
+function renderKeyLegend(catId){
+  var chars = CATEGORY_KEYS[catId] || [];
+  var chips = chars.map(function(ch){
+    var label = KEY_LABELS[ch] || "";
+    return '<span class="legend-chip"><b>' + escapeHtml(ch) + '</b>' + (label ? '<i>' + escapeHtml(label) + '</i>' : '') + '</span>';
+  }).join("");
+  return '<div class="key-legend"><span class="key-legend-title">on your keyboard</span>' + chips + '</div>';
+}
+
+/* ============================== STATE ============================== */
+
+var state = {
+  screen: "home",           // home | session | summary
+  progress: {},              // catId -> { phase, bestStreak, lastAccuracy, mastered, learnedOnce }
+  session: null,
+  lastSummary: null
+};
+
+CATEGORY_ORDER.forEach(function(catId){
+  state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false, learnedOnce: false };
+});
+
+function shuffle(arr){
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function isMatch(input, item){
+  var n = input.replace(/^\s+|\s+$/g, "");
+  if (n === item.answer) return true;
+  if (item.acceptableVariants){
+    for (var k = 0; k < item.acceptableVariants.length; k++){
+      if (n === item.acceptableVariants[k]) return true;
+    }
+  }
+  return false;
+}
+
+/* ============================== SESSION LOGIC ============================== */
+
+function startSession(catId){
+  var phase = state.progress[catId].phase;
+  var items = CONTENT[catId];
+  var queue = shuffle(items).map(function(item){ return item; });
+  state.session = {
+    catId: catId,
+    phase: phase,
+    queue: queue,
+    index: 0,
+    results: [],
+    currentStreak: 0,
+    bestStreakSession: 0,
+    cardStart: 0,
+    timerId: null,
+    locked: false
+  };
+  state.screen = "session";
+  renderRoot();
+  mountCard();
+}
+
+function currentItem(){
+  var s = state.session;
+  return s.queue[s.index];
+}
+
+function stopTimer(){
+  if (state.session && state.session.timerId){
+    clearInterval(state.session.timerId);
+    state.session.timerId = null;
+  }
+}
+
+function mountCard(){
+  var s = state.session;
+  s.locked = false;
+  s.cardStart = Date.now();
+  renderSessionScreen();
+
+  var timeLimit = s.phase === "learn" ? LEARN_TIME : (s.phase === "practice" ? PRACTICE_TIME : BLITZ_TIME);
+  if (timeLimit > 0){
+    var totalMs = timeLimit * 1000;
+    var fill = document.getElementById("timerFill");
+    var txt = document.getElementById("timerText");
+    s.timerId = setInterval(function(){
+      var elapsed = Date.now() - s.cardStart;
+      var remain = Math.max(0, totalMs - elapsed);
+      var frac = remain / totalMs;
+      if (fill){
+        fill.style.width = (frac * 100) + "%";
+        fill.classList.toggle("warn", frac <= 0.5 && frac > 0.2);
+        fill.classList.toggle("danger", frac <= 0.2);
+      }
+      if (txt) txt.textContent = (remain / 1000).toFixed(1) + "s";
+      if (remain <= 0){
+        clearInterval(s.timerId);
+        s.timerId = null;
+        onTimeout();
+      }
+    }, 100);
+  }
+
+  var input = document.getElementById("typeInput");
+  if (input){ input.value = ""; input.focus(); }
+
+  if (s.phase === "learn"){
+    var firstTok = document.querySelector("#breakdown .tok");
+    if (firstTok) firstTok.classList.add("is-active");
+  }
+}
+
+function onTimeout(){
+  var s = state.session;
+  if (s.locked) return;
+  s.locked = true;
+  recordResult(false, true);
+}
+
+function onReveal(){
+  var s = state.session;
+  if (s.locked) return;
+  s.locked = true;
+  stopTimer();
+  recordResult(false, false, true);
+}
+
+function handleInput(){
+  var s = state.session;
+  if (s.locked) return;
+  var input = document.getElementById("typeInput");
+  var item = currentItem();
+  var typed = input.value;
+  var revealAll = s.phase === "learn";
+
+  var diffEl = document.getElementById("diffLine");
+  if (diffEl) diffEl.innerHTML = renderDiff(typed, item.answer, revealAll);
+
+  var previewEl = document.getElementById("typedPreview");
+  if (previewEl){
+    previewEl.innerHTML = typed ? renderTypedPreview(typed) : "·";
+    previewEl.classList.toggle("is-empty", !typed);
+  }
+
+  if (s.phase === "learn"){
+    var breakdownEl = document.getElementById("breakdown");
+    if (breakdownEl){
+      var toks = breakdownEl.querySelectorAll(".tok");
+      for (var t = 0; t < toks.length; t++){
+        var tokEl = toks[t];
+        var tStart = parseInt(tokEl.getAttribute("data-start"), 10);
+        var tEnd = parseInt(tokEl.getAttribute("data-end"), 10);
+        tokEl.classList.toggle("is-done", typed.length >= tEnd);
+        tokEl.classList.toggle("is-active", typed.length >= tStart && typed.length < tEnd);
+      }
+    }
+  }
+
+  if (isMatch(typed, item)){
+    s.locked = true;
+    stopTimer();
+    recordResult(true, false);
+  }
+}
+
+function handleKeydown(e){
+  if (e.key !== "Enter") return;
+  var s = state.session;
+  if (s.locked) return;
+  var input = document.getElementById("typeInput");
+  var item = currentItem();
+  if (isMatch(input.value, item)) return; // handled by input event already
+  if (s.phase === "learn"){
+    var wordLine = document.getElementById("diffLine");
+    if (wordLine){
+      wordLine.classList.remove("wrong-flash");
+      void wordLine.offsetWidth;
+      wordLine.classList.add("wrong-flash");
+    }
+    return; // learn has no fail state, just keep trying
+  }
+  s.locked = true;
+  stopTimer();
+  recordResult(false, false);
+}
+
+function renderDiff(typed, answer, revealRemainder){
+  if (!typed && !revealRemainder) return '<span class="diff-placeholder">start typing…</span><span class="caret"></span>';
+  var html = "";
+  for (var i = 0; i < typed.length; i++){
+    var ok = i < answer.length && typed[i] === answer[i];
+    html += '<span class="diff-ch ' + (ok ? "diff-ok" : "diff-bad") + '">' + escapeHtml(typed[i]) + "</span>";
+  }
+  html += '<span class="caret"></span>';
+  if (revealRemainder && typed.length < answer.length){
+    html += '<span class="diff-rest">' + escapeHtml(answer.slice(typed.length)) + "</span>";
+  }
+  return html;
+}
+
+function recordResult(correct, timedOut, revealed){
+  var s = state.session;
+  var item = currentItem();
+  var timeMs = Date.now() - s.cardStart;
+
+  s.results.push({ correct: correct, timeMs: timeMs, category: s.catId });
+
+  if (correct){
+    s.currentStreak++;
+    if (s.currentStreak > s.bestStreakSession) s.bestStreakSession = s.currentStreak;
+  } else {
+    s.currentStreak = 0;
+  }
+
+  var card = document.getElementById("sessionCard");
+  var feedback = document.getElementById("feedbackTag");
+  var input = document.getElementById("typeInput");
+  var diffEl = document.getElementById("diffLine");
+
+  if (input) input.disabled = true;
+
+  if (correct){
+    if (card) card.classList.add("state-correct");
+    if (feedback){ feedback.textContent = "correct"; feedback.className = "feedback-tag ok"; }
+  } else {
+    if (card) card.classList.add("state-wrong");
+    if (feedback){ feedback.textContent = timedOut ? "time's up" : (revealed ? "revealed" : "not quite"); feedback.className = "feedback-tag bad"; }
+    if (diffEl) diffEl.innerHTML = renderDiff(input ? input.value : "", item.answer, true);
+    var ansBox = document.getElementById("answerReveal");
+    if (ansBox) ansBox.style.display = "block";
+  }
+
+  var delay = correct ? 420 : 1100;
+  setTimeout(nextCard, delay);
+}
+
+function nextCard(){
+  var s = state.session;
+  s.index++;
+  if (s.index >= s.queue.length){
+    finishSession();
+  } else {
+    mountCard();
+  }
+}
+
+function finishSession(){
+  var s = state.session;
+  var cat = s.catId;
+  var total = s.results.length;
+  var correctCount = s.results.filter(function(r){ return r.correct; }).length;
+  var accuracy = total ? Math.round((correctCount / total) * 100) : 0;
+  var avgTime = total ? Math.round(s.results.reduce(function(a,r){ return a + r.timeMs; }, 0) / total) / 1000 : 0;
+
+  var prog = state.progress[cat];
+  var advanced = false;
+  var message = "";
+
+  if (s.phase === "learn"){
+    prog.learnedOnce = true;
+    prog.phase = "practice";
+    advanced = true;
+    message = "All " + total + " cards learned. Practice is now unlocked.";
+  } else if (s.phase === "practice"){
+    prog.lastAccuracy = accuracy;
+    if (accuracy >= PRACTICE_UNLOCK){
+      prog.phase = "blitz";
+      advanced = true;
+      message = "Accuracy cleared " + PRACTICE_UNLOCK + "%. Blitz is now unlocked.";
+    } else {
+      message = "Need " + PRACTICE_UNLOCK + "%+ accuracy to unlock Blitz — give it another pass.";
+    }
+  } else if (s.phase === "blitz"){
+    prog.lastAccuracy = accuracy;
+    if (s.bestStreakSession > prog.bestStreak) prog.bestStreak = s.bestStreakSession;
+    if (accuracy >= MASTER_THRESHOLD){
+      prog.mastered = true;
+      message = "Mastered — " + accuracy + "% accuracy in Blitz.";
+    } else {
+      message = "Keep drilling Blitz to push accuracy past " + MASTER_THRESHOLD + "%.";
+    }
+  }
+
+  state.lastSummary = {
+    catId: cat, phase: s.phase, total: total, correctCount: correctCount,
+    accuracy: accuracy, avgTime: avgTime, bestStreak: s.bestStreakSession,
+    advanced: advanced, message: message
+  };
+
+  state.session = null;
+  state.screen = "summary";
+  renderRoot();
+}
+
+/* ============================== RENDER: HOME ============================== */
+
+function phaseLabel(phase, mastered){
+  if (mastered) return "Mastered";
+  if (phase === "learn") return "Learn";
+  if (phase === "practice") return "Practice";
+  return "Blitz";
+}
+function phaseClass(phase, mastered){
+  if (mastered) return "mastered";
+  return phase;
+}
+
+function renderHome(){
+  var tipsHtml = TIPS.map(function(t){
+    return '<div class="tip-card"><div class="tip-key">' + escapeHtml(t.key) + '</div><div class="tip-body">' + escapeHtml(t.body) + "</div></div>";
+  }).join("");
+
+  var cardsHtml = CATEGORY_ORDER.map(function(catId){
+    var meta = CATEGORY_META[catId];
+    var prog = state.progress[catId];
+    var count = CONTENT[catId].length;
+    var pct = prog.mastered ? 100 : (prog.phase === "learn" ? 8 : prog.phase === "practice" ? (prog.lastAccuracy != null ? prog.lastAccuracy : 40) : (prog.lastAccuracy != null ? prog.lastAccuracy : 70));
+    var metaText = prog.mastered
+      ? "best streak " + prog.bestStreak
+      : prog.phase === "learn"
+        ? count + " cards to learn"
+        : (prog.lastAccuracy != null ? prog.lastAccuracy + "% last round" : "not attempted yet");
+
+    return (
+      '<button type="button" class="cat-card' + (prog.mastered ? " is-mastered" : "") + '" data-action="start-category" data-cat="' + catId + '">' +
+        '<div class="cat-top">' +
+          '<div class="cat-name">' + escapeHtml(meta.label) + '</div>' +
+          '<div class="phase-pill ' + phaseClass(prog.phase, prog.mastered) + '">' + phaseLabel(prog.phase, prog.mastered) + '</div>' +
+        '</div>' +
+        '<div class="cat-desc">' + escapeHtml(meta.blurb) + '</div>' +
+        '<div class="cat-meta"><span>' + escapeHtml(metaText) + '</span></div>' +
+        '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '</button>'
+    );
+  }).join("");
+
+  return (
+    '<div class="topbar">' +
+      '<div class="brand"><span class="brand-mark">desmos<span class="dot">_</span>drill</span><span class="brand-sub">keystroke recall trainer</span></div>' +
+      '<div class="topbar-actions"><button class="icon-btn" data-action="toggle-theme" type="button">toggle theme</button></div>' +
+    '</div>' +
+    '<details class="tips">' +
+      '<summary>Desmos keyboard behaviors worth knowing<span class="chev">›</span></summary>' +
+      '<div class="tips-grid">' + tipsHtml + '</div>' +
+    '</details>' +
+    '<div class="section-label">Categories</div>' +
+    '<div class="cat-grid">' + cardsHtml + '</div>'
+  );
+}
+
+/* ============================== RENDER: SESSION ============================== */
+
+function renderSessionScreen(){
+  var s = state.session;
+  var item = currentItem();
+  var meta = CATEGORY_META[s.catId];
+  var phaseNames = { learn: "Learn", practice: "Practice", blitz: "Blitz" };
+  var timeLimit = s.phase === "learn" ? LEARN_TIME : (s.phase === "practice" ? PRACTICE_TIME : BLITZ_TIME);
+
+  var dots = s.queue.map(function(_, idx){
+    var cls = "dot";
+    if (idx < s.results.length) cls += s.results[idx].correct ? " done-ok" : " done-bad";
+    else if (idx === s.index) cls += " current";
+    return '<span class="' + cls + '"></span>';
+  }).join("");
+
+  var streakHtml = s.phase === "blitz"
+    ? '<div class="streak-badge"><span><span class="flame">▲</span> streak <b>' + s.currentStreak + '</b></span><span>best <b>' + s.bestStreakSession + '</b></span></div>'
+    : "";
+
+  var timerHtml = timeLimit > 0
+    ? '<div class="timer-wrap"><div class="timer-row"><span>' + phaseNames[s.phase] + '</span><span id="timerText">' + timeLimit.toFixed(1) + 's</span></div>' +
+      '<div class="timer-track"><div class="timer-fill" id="timerFill" style="width:100%"></div></div></div>'
+    : '<div class="timer-wrap"><div class="timer-row"><span>Learn — untimed</span><span>&nbsp;</span></div></div>';
+
+  var answerHtml = s.phase === "learn"
+    ? '<div class="breakdown" id="breakdown">' + renderBreakdown(item.answer) + '</div>'
+    : '<div class="answer-shown" id="answerReveal" style="display:none">' + escapeHtml(item.answer) + "</div>";
+
+  var noteHtml = (s.phase === "learn" && item.note)
+    ? '<div class="note-box"><b>tip —</b> ' + escapeHtml(item.note) + "</div>"
+    : "";
+
+  var legendHtml = renderKeyLegend(s.catId);
+
+  var revealBtn = s.phase !== "learn"
+    ? '<button type="button" class="btn btn-reveal" data-action="reveal">Reveal (counts as a miss)</button>'
+    : "";
+
+  var html =
+    '<div class="session">' +
+      '<div class="session-head">' +
+        '<div class="session-cat"><button class="session-back" data-action="back-home" type="button">← categories</button><span>&nbsp;/&nbsp;' + escapeHtml(meta.label) + '</span></div>' +
+        streakHtml +
+      '</div>' +
+      '<div class="progress-dots">' + dots + '</div>' +
+      timerHtml +
+      '<div class="card" id="sessionCard">' +
+        '<div class="phase-tag">' + phaseNames[s.phase] + '<span class="diff-pill ' + item.difficulty + '">' + item.difficulty + '</span></div>' +
+        '<div class="prompt">' + renderMath(item.display) + '</div>' +
+        answerHtml +
+        '<div class="type-stage" id="typeStage">' +
+          '<input class="type-input" id="typeInput" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />' +
+          '<div class="typed-preview is-empty" id="typedPreview">·</div>' +
+          '<div class="word-line" id="diffLine"><span class="diff-placeholder">start typing…</span><span class="caret"></span></div>' +
+        '</div>' +
+        noteHtml +
+        legendHtml +
+        '<div class="feedback-tag" id="feedbackTag"></div>' +
+        '<div class="card-actions">' + revealBtn + '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById("root").innerHTML = html;
+
+  var input = document.getElementById("typeInput");
+  input.addEventListener("input", handleInput);
+  input.addEventListener("keydown", handleKeydown);
+}
+
+/* ============================== RENDER: SUMMARY ============================== */
+
+function renderSummary(){
+  var sum = state.lastSummary;
+  var meta = CATEGORY_META[sum.catId];
+  var phaseNames = { learn: "Learn", practice: "Practice", blitz: "Blitz" };
+
+  var statsHtml = sum.phase === "learn"
+    ? (
+        '<div class="stat-grid">' +
+          '<div class="stat-tile"><div class="stat-num">' + sum.total + '</div><div class="stat-label">cards</div></div>' +
+          '<div class="stat-tile"><div class="stat-num">' + sum.avgTime.toFixed(1) + 's</div><div class="stat-label">avg / card</div></div>' +
+          '<div class="stat-tile"><div class="stat-num">100%</div><div class="stat-label">complete</div></div>' +
+          '<div class="stat-tile"><div class="stat-num">→</div><div class="stat-label">practice</div></div>' +
+        '</div>'
+      )
+    : (
+        '<div class="stat-grid">' +
+          '<div class="stat-tile"><div class="stat-num">' + sum.accuracy + '%</div><div class="stat-label">accuracy</div></div>' +
+          '<div class="stat-tile"><div class="stat-num">' + sum.avgTime.toFixed(1) + 's</div><div class="stat-label">avg / card</div></div>' +
+          '<div class="stat-tile"><div class="stat-num">' + sum.bestStreak + '</div><div class="stat-label">best streak</div></div>' +
+          '<div class="stat-tile"><div class="stat-num">' + sum.correctCount + '/' + sum.total + '</div><div class="stat-label">correct</div></div>' +
+        '</div>'
+      );
+
+  var retryLabel = sum.phase === "learn" ? "Replay Learn" : sum.phase === "practice" ? "Replay Practice" : "Replay Blitz";
+
+  var html =
+    '<div class="summary">' +
+      '<div class="phase-tag">' + phaseNames[sum.phase] + ' · ' + escapeHtml(meta.label) + '</div>' +
+      '<div class="summary-title">' + (sum.advanced ? "Round complete" : "Round complete") + '</div>' +
+      '<div class="summary-sub">' + escapeHtml(sum.message) + '</div>' +
+      statsHtml +
+      '<div class="summary-actions">' +
+        '<button class="btn" data-action="back-home" type="button">All categories</button>' +
+        '<button class="btn" data-action="retry-phase" data-cat="' + sum.catId + '" type="button">' + retryLabel + '</button>' +
+        (sum.advanced ? '<button class="btn btn-primary" data-action="start-category" data-cat="' + sum.catId + '" type="button">Continue →</button>' : '') +
+      '</div>' +
+    '</div>';
+
+  document.getElementById("root").innerHTML = html;
+}
+
+/* ============================== ROOT ROUTER ============================== */
+
+function renderRoot(){
+  var root = document.getElementById("root");
+  if (state.screen === "home"){
+    root.innerHTML = renderHome();
+  } else if (state.screen === "summary"){
+    renderSummary();
+  }
+  // "session" screen is rendered by mountCard -> renderSessionScreen
+}
+
+/* ============================== EVENTS ============================== */
+
+document.addEventListener("click", function(e){
+  var stage = e.target.closest("#typeStage");
+  if (stage){
+    var liveInput = document.getElementById("typeInput");
+    if (liveInput && !liveInput.disabled) liveInput.focus();
+  }
+
+  var el = e.target.closest("[data-action]");
+  if (!el) return;
+  var action = el.getAttribute("data-action");
+
+  if (action === "start-category"){
+    startSession(el.getAttribute("data-cat"));
+  } else if (action === "retry-phase"){
+    startSession(el.getAttribute("data-cat"));
+  } else if (action === "back-home"){
+    if (state.session) stopTimer();
+    state.session = null;
+    state.screen = "home";
+    renderRoot();
+  } else if (action === "reveal"){
+    onReveal();
+  } else if (action === "toggle-theme"){
+    var rootEl = document.documentElement;
+    var cur = rootEl.getAttribute("data-theme");
+    var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var effectiveDark = cur ? cur === "dark" : prefersDark;
+    rootEl.setAttribute("data-theme", effectiveDark ? "light" : "dark");
+  }
+});
+
+document.documentElement.setAttribute("data-theme", "dark");
+renderRoot();
+
+})();
+</script>
