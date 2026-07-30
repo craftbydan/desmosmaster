@@ -1181,7 +1181,6 @@ function tokenizeAnswerWithNav(str, catId){
     rawTokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
   }
 
-  // Insert explicit navigation arrow steps (→) where Desmos requires stepping out of boxes
   var tokens = [];
   for (var i = 0; i < rawTokens.length; i++) {
     var cur = rawTokens[i];
@@ -1189,13 +1188,10 @@ function tokenizeAnswerWithNav(str, catId){
 
     var next = rawTokens[i+1];
     if (next) {
-      // Check if current token was inside exponent (^) or root (sqrt) or fraction denominator (/) and next token returns to baseline
       var isAfterExponentNumber = cur.text === "100" || (cur.text === "2" && i > 0 && rawTokens[i-1].text === "^");
       var isNextOperator = (next.text === "+" || next.text === "-" || next.text === "=");
       
-      // If we just typed an exponent like x^100 or x^2 or sqrt(x) and next is +5, Desmos requires →
       if ((cur.text === "100" || cur.text === "2" || cur.text === "y") && isNextOperator && str.includes("^")) {
-        // Only insert if exponent was opened before
         var hasPowBefore = false;
         for (var k = i; k >= 0; k--) { if (rawTokens[k].text === "^") { hasPowBefore = true; break; } }
         if (hasPowBefore) {
@@ -1289,17 +1285,30 @@ var state = {
   lastSummary: null
 };
 
+// 1. FIRST Initialize default progress for ALL category keys so none are ever undefined
+Object.keys(CATEGORY_META).forEach(function(catId){
+  state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
+});
+
+// 2. THEN merge saved progress on top of defaults
 function loadSavedState() {
   try {
     var raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       var parsed = JSON.parse(raw);
-      if (parsed.progress) state.progress = parsed.progress;
+      if (parsed.progress) {
+        Object.keys(parsed.progress).forEach(function(k){
+          if (state.progress[k]) {
+            state.progress[k] = parsed.progress[k];
+          }
+        });
+      }
       if (parsed.activePart) state.activePart = parsed.activePart;
       if (parsed.pace) state.pace = parsed.pace;
     }
   } catch(e) {}
 }
+loadSavedState();
 
 function saveState() {
   try {
@@ -1310,13 +1319,6 @@ function saveState() {
     }));
   } catch(e) {}
 }
-
-Object.keys(CATEGORY_META).forEach(function(catId){
-  if (!state.progress[catId]) {
-    state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
-  }
-});
-loadSavedState();
 
 function shuffle(arr){
   var a = arr.slice();
@@ -1341,8 +1343,13 @@ function isMatch(input, item){
 /* ============================== SESSION ENGINE ============================== */
 
 function startSession(catId){
-  var phase = state.progress[catId].phase;
-  var items = CONTENT[catId];
+  if (!state.progress[catId]) {
+    state.progress[catId] = { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
+  }
+  var phase = state.progress[catId].phase || "learn";
+  var items = CONTENT[catId] || [];
+  if (!items || items.length === 0) return;
+
   var queue = shuffle(items).map(function(item){ return item; });
   state.session = {
     catId: catId,
@@ -1364,7 +1371,7 @@ function startSession(catId){
 
 function currentItem(){
   var s = state.session;
-  return s.queue[s.index];
+  return s ? s.queue[s.index] : null;
 }
 
 function stopTimer(){
@@ -1376,11 +1383,13 @@ function stopTimer(){
 
 function mountCard(){
   var s = state.session;
+  if (!s) return;
   s.locked = false;
   s.cardStart = Date.now();
   renderSessionScreen();
 
   var item = currentItem();
+  if (!item) return;
   s.allowedTime = calculateAllowedTime(item.answer, s.phase, state.pace);
   
   if (s.allowedTime > 0){
@@ -1422,7 +1431,7 @@ function mountCard(){
 
 function onTimeout(){
   var s = state.session;
-  if (s.locked) return;
+  if (!s || s.locked) return;
   s.locked = true;
   playSound("wrong");
   recordResult(false, true);
@@ -1430,7 +1439,7 @@ function onTimeout(){
 
 function onReveal(){
   var s = state.session;
-  if (s.locked) return;
+  if (!s || s.locked) return;
   s.locked = true;
   stopTimer();
   playSound("click");
@@ -1439,9 +1448,10 @@ function onReveal(){
 
 function handleInput(){
   var s = state.session;
-  if (s.locked) return;
+  if (!s || s.locked) return;
   var input = document.getElementById("typeInput");
   var item = currentItem();
+  if (!item) return;
   var typed = input.value;
   var revealAll = s.phase === "learn";
 
@@ -1489,10 +1499,10 @@ function handleKeydown(e){
 
   if (e.key !== "Enter") return;
   var s = state.session;
-  if (s.locked) return;
+  if (!s || s.locked) return;
   var input = document.getElementById("typeInput");
   var item = currentItem();
-  if (isMatch(input.value, item)) return;
+  if (!item || isMatch(input.value, item)) return;
 
   playSound("wrong");
   if (s.phase === "learn"){
@@ -1525,6 +1535,7 @@ function renderDiff(typed, answer, revealRemainder){
 
 function recordResult(correct, timedOut, revealed){
   var s = state.session;
+  if (!s) return;
   var item = currentItem();
   var timeMs = Date.now() - s.cardStart;
 
@@ -1550,7 +1561,7 @@ function recordResult(correct, timedOut, revealed){
   } else {
     if (card) card.classList.add("state-wrong");
     if (feedback){ feedback.textContent = timedOut ? "time's up" : (revealed ? "revealed" : "not quite"); feedback.className = "feedback-tag bad"; }
-    if (diffEl) diffEl.innerHTML = renderDiff(input ? input.value : "", item.answer, true);
+    if (diffEl) diffEl.innerHTML = renderDiff(input ? input.value : "", item ? item.answer : "", true);
     var ansBox = document.getElementById("answerReveal");
     if (ansBox) ansBox.style.display = "block";
   }
@@ -1561,6 +1572,7 @@ function recordResult(correct, timedOut, revealed){
 
 function nextCard(){
   var s = state.session;
+  if (!s) return;
   s.index++;
   if (s.index >= s.queue.length){
     finishSession();
@@ -1571,13 +1583,14 @@ function nextCard(){
 
 function finishSession(){
   var s = state.session;
+  if (!s) return;
   var cat = s.catId;
   var total = s.results.length;
   var correctCount = s.results.filter(function(r){ return r.correct; }).length;
   var accuracy = total ? Math.round((correctCount / total) * 100) : 0;
   var avgTime = total ? Math.round(s.results.reduce(function(a,r){ return a + r.timeMs; }, 0) / total) / 1000 : 0;
 
-  var prog = state.progress[cat];
+  var prog = state.progress[cat] || { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
   var advanced = false;
   var message = "";
 
@@ -1605,6 +1618,7 @@ function finishSession(){
     }
   }
 
+  state.progress[cat] = prog;
   saveState();
 
   state.lastSummary = {
@@ -1632,8 +1646,8 @@ function phaseClass(phase, mastered){
 }
 
 function renderHome(){
-  var part = state.activePart;
-  var catKeys = CATEGORY_ORDER[part];
+  var part = state.activePart || "master";
+  var catKeys = CATEGORY_ORDER[part] || CATEGORY_ORDER["master"];
 
   var tipsHtml = TIPS.map(function(t){
     return '<div class="tip-card"><div class="tip-key">' + escapeHtml(t.key) + '</div><div class="tip-body">' + escapeHtml(t.body) + "</div></div>";
@@ -1641,8 +1655,9 @@ function renderHome(){
 
   var cardsHtml = catKeys.map(function(catId){
     var meta = CATEGORY_META[catId];
+    if (!meta) return "";
     var prog = state.progress[catId] || { phase: "learn", bestStreak: 0, lastAccuracy: null, mastered: false };
-    var count = CONTENT[catId].length;
+    var count = (CONTENT[catId] || []).length;
     var pct = prog.mastered ? 100 : (prog.phase === "learn" ? 10 : prog.phase === "practice" ? (prog.lastAccuracy != null ? prog.lastAccuracy : 40) : (prog.lastAccuracy != null ? prog.lastAccuracy : 75));
     var metaText = prog.mastered
       ? "best streak " + prog.bestStreak
@@ -1704,8 +1719,10 @@ function renderHome(){
 
 function renderSessionScreen(){
   var s = state.session;
+  if (!s) return;
   var item = currentItem();
-  var meta = CATEGORY_META[s.catId];
+  if (!item) return;
+  var meta = CATEGORY_META[s.catId] || { label: "Category" };
   var phaseNames = { learn: "Learn", practice: "Practice", blitz: "Blitz" };
 
   var dots = s.queue.map(function(_, idx){
@@ -1765,15 +1782,18 @@ function renderSessionScreen(){
   document.getElementById("root").innerHTML = html;
 
   var input = document.getElementById("typeInput");
-  input.addEventListener("input", handleInput);
-  input.addEventListener("keydown", handleKeydown);
+  if (input) {
+    input.addEventListener("input", handleInput);
+    input.addEventListener("keydown", handleKeydown);
+  }
 }
 
 /* ============================== RENDER: SUMMARY ============================== */
 
 function renderSummary(){
   var sum = state.lastSummary;
-  var meta = CATEGORY_META[sum.catId];
+  if (!sum) { state.screen = "home"; renderRoot(); return; }
+  var meta = CATEGORY_META[sum.catId] || { label: "Category" };
   var phaseNames = { learn: "Learn", practice: "Practice", blitz: "Blitz" };
 
   var statsHtml = sum.phase === "learn"
