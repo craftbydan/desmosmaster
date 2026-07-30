@@ -294,7 +294,7 @@
 
     /* ---------- Session Screen ---------- */
     .session { display: flex; flex-direction: column; align-items: center; gap: 24px; }
-    .session-head { width: 100%; max-width: 860px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .session-head { width: 100%; max-width: 880px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .session-cat { font-size: 15px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; font-weight: 500; }
     .session-back { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 14px; padding: 4px 2px; font-family: var(--sans); font-weight: 500; }
     .session-back:hover { color: var(--text); }
@@ -320,7 +320,7 @@
     .dot.done-bad { background: var(--danger); }
     .dot.current { background: var(--text); transform: scale(1.35); box-shadow: 0 0 8px rgba(255,255,255,0.4); }
 
-    .timer-wrap { width: 100%; max-width: 860px; }
+    .timer-wrap { width: 100%; max-width: 880px; }
     .timer-row { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 13px; color: var(--text-faint); margin-bottom: 6px; }
     .timer-track { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--border); }
     .timer-fill { height: 100%; width: 100%; background: var(--accent); border-radius: 4px; transition: background-color 0.2s; }
@@ -330,7 +330,7 @@
 
     .card {
       width: 100%;
-      max-width: 860px;
+      max-width: 880px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 24px;
@@ -387,41 +387,68 @@
       letter-spacing: .01em;
     }
 
-    /* ---------- Cognitive Motor Flow & Sleek Tactile Keycaps ---------- */
+    /* ---------- Educational Action + Keystroke Cards ---------- */
     .breakdown {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px 14px;
+      gap: 12px 14px;
       justify-content: center;
       align-items: center;
       width: 100%;
-      max-width: 820px;
+      max-width: 840px;
       margin: 8px 0;
     }
     .tok {
       display: inline-flex;
+      flex-direction: column;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 6px;
       background: var(--surface-2);
       border: 1.5px solid var(--border);
       border-radius: 14px;
       padding: 10px 16px;
+      min-width: 96px;
       transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       position: relative;
     }
     
+    .tok-action-name {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-strong);
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .tok-action-name.nav-action {
+      color: #60a5fa;
+    }
+    .tok-action-name.term-action {
+      color: var(--text-dim);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .tok-kbd-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
     /* Tactile 3D Keyboard Keycaps */
     kbd.keycap {
       font-family: var(--mono);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       background: linear-gradient(180deg, var(--surface-3) 0%, var(--surface-2) 100%);
       color: var(--text);
       border: 1.5px solid var(--border-strong);
       border-bottom: 3.5px solid var(--border-strong);
       border-radius: 8px;
-      padding: 6px 12px;
+      padding: 5px 11px;
       box-shadow: 0 3px 6px rgba(0,0,0,0.25);
       display: inline-flex;
       align-items: center;
@@ -438,22 +465,25 @@
       box-shadow: 0 3px 8px rgba(226, 183, 20, 0.2);
     }
     kbd.keycap.direct {
-      font-size: 19px;
-      padding: 8px 16px;
+      font-size: 18px;
+      padding: 7px 15px;
       background: linear-gradient(180deg, #3d414f 0%, #2a2c36 100%);
       color: var(--text);
       border-color: #5a5f72;
       border-bottom-color: #434756;
     }
-
-    .key-combo-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    kbd.keycap.nav {
+      background: linear-gradient(180deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.12) 100%);
+      color: #60a5fa;
+      border-color: #3b82f6;
+      border-bottom-color: #1d4ed8;
+      font-size: 18px;
+      padding: 6px 14px;
     }
+
     .key-plus {
       font-family: var(--sans);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-faint);
     }
@@ -466,6 +496,7 @@
       box-shadow: 0 0 20px rgba(226, 183, 20, 0.45);
       z-index: 2;
     }
+    .tok.is-active .tok-action-name { color: #fff; }
     .tok.is-active kbd.keycap.direct {
       background: linear-gradient(180deg, var(--accent-strong) 0%, var(--accent) 100%);
       color: #0f172a;
@@ -721,7 +752,7 @@ var CONTENT = {
     { display:"(2x)^{2}",             answer:"(2x)^2", difficulty:"easy" },
     { display:"x^{2}y^{3}",           answer:"x^2y^3", acceptableVariants:["x^2*y^3"], difficulty:"medium" },
     { display:"10^{x}",               answer:"10^x", difficulty:"easy" },
-    { display:"x^{100}+5",            answer:"x^100+5", difficulty:"hard", note:"Press → after 100 to exit the exponent before +5." },
+    { display:"x^{100}+5",            answer:"x^100+5", difficulty:"hard", note:"Press → after typing 100 to exit the exponent box before typing + 5." },
     { display:"3(x-2)^{2}+4x-7",      answer:"3(x-2)^2+4x-7", difficulty:"hard" }
   ],
 
@@ -729,7 +760,7 @@ var CONTENT = {
     { display:"sqrt{x}",                         answer:"sqrt(x)", difficulty:"easy" },
     { display:"sqrt{x^{2}+1}",                    answer:"sqrt(x^2+1)", difficulty:"medium" },
     { display:"sqrt{25}",                          answer:"sqrt(25)", difficulty:"easy" },
-    { display:"sqrt{x}+3",                        answer:"sqrt(x)+3", difficulty:"medium", note:"Type sqrt( then argument, then → to exit before +3." },
+    { display:"sqrt{x}+3",                        answer:"sqrt(x)+3", difficulty:"medium", note:"Type sqrt( then x, then press → to exit radical before +3." },
     { display:"sqrt{sqrt{x}}",                     answer:"sqrt(sqrt(x))", difficulty:"medium" },
     { display:"2sqrt{x}",                          answer:"2sqrt(x)", acceptableVariants:["2*sqrt(x)"], difficulty:"easy" },
     { display:"sqrt{x}sqrt{y}",                    answer:"sqrt(x)sqrt(y)", acceptableVariants:["sqrt(x)*sqrt(y)"], difficulty:"medium" },
@@ -1087,87 +1118,144 @@ function renderTypedPreview(str){
   return out;
 }
 
-/* ============================== KEYSTROKE BREAKDOWN & KEY MAP ============================== */
+/* ============================== KEYSTROKE & DESMOS ACTION MAP ============================== */
 
-var KEY_LABELS = {
-  "^":  { keys: ["Shift", "6"] },
-  "_":  { keys: ["Shift", "-"] },
-  "/":  { keys: ["/"] },
-  "*":  { keys: ["Shift", "8"] },
-  "+":  { keys: ["Shift", "="] },
-  "-":  { keys: ["-"] },
-  "~":  { keys: ["Shift", "`"] },
-  "(":  { keys: ["Shift", "9"] },
-  ")":  { keys: ["Shift", "0"] },
-  "{":  { keys: ["Shift", "["] },
-  "}":  { keys: ["Shift", "]"] },
-  "<=": { sequence: [["Shift", ","], ["="]] },
-  ">=": { sequence: [["Shift", "."], ["="]] },
-  "<":  { keys: ["Shift", ","] },
-  ">":  { keys: ["Shift", "."] },
-  "=":  { keys: ["="] },
-  ":":  { keys: ["Shift", ";"] },
-  ",":  { keys: [","] }
+var DESMOS_ACTIONS = {
+  "^":  { action: "EXPONENT (^)", desc: "Opens power box", keys: ["Shift", "6"] },
+  "_":  { action: "SUBSCRIPT (_)", desc: "Opens base subscript", keys: ["Shift", "-"] },
+  "/":  { action: "FRACTION (/)", desc: "Creates stacked fraction bar", keys: ["/"] },
+  "*":  { action: "MULTIPLY (*)", desc: "Times multiplication dot", keys: ["Shift", "8"] },
+  "+":  { action: "PLUS (+)", desc: "Addition operator", keys: ["Shift", "="] },
+  "-":  { action: "MINUS (-)", desc: "Subtraction / negative sign", keys: ["-"] },
+  "~":  { action: "REGRESSION (~)", desc: "Desmos model fit", keys: ["Shift", "`"] },
+  "(":  { action: "OPEN PAREN (", desc: "Start term group", keys: ["Shift", "9"] },
+  ")":  { action: "CLOSE PAREN )", desc: "Close group", keys: ["Shift", "0"] },
+  "{":  { action: "PIECEWISE {", desc: "Open condition domain", keys: ["Shift", "["] },
+  "}":  { action: "CLOSE PIECE }", desc: "Close piecewise domain", keys: ["Shift", "]"] },
+  "<=": { action: "≤ SYMBOL", desc: "Less than or equal to", sequence: [["Shift", ","], ["="]] },
+  ">=": { action: "≥ SYMBOL", desc: "Greater than or equal to", sequence: [["Shift", "."], ["="]] },
+  "<":  { action: "LESS THAN (<)", desc: "Strict inequality", keys: ["Shift", ","] },
+  ">":  { action: "GREATER THAN (>)", desc: "Strict inequality", keys: ["Shift", "."] },
+  "=":  { action: "EQUALS (=)", desc: "Equation equality", keys: ["="] },
+  ":":  { action: "COLON (:)", desc: "Piecewise condition separator", keys: ["Shift", ";"] },
+  ",":  { action: "COMMA (,)", desc: "Piecewise branch separator", keys: [","] },
+  "→":  { action: "EXIT BOX (→)", desc: "Exit fraction/exponent to baseline", navKey: "→" }
 };
 
-var FN_NAMES = ["sqrt","sin","cos","tan","log","ln","abs","mean","stdev","ncr"];
+var FN_ACTIONS = {
+  "sqrt": { action: "SQUARE ROOT (√)", desc: "Opens radical box", keys: ["s","q","r","t","("] },
+  "sin":  { action: "SINE (sin)", desc: "Trig function", keys: ["s","i","n","("] },
+  "cos":  { action: "COSINE (cos)", desc: "Trig function", keys: ["c","o","s","("] },
+  "tan":  { action: "TANGENT (tan)", desc: "Trig function", keys: ["t","a","n","("] },
+  "log":  { action: "LOGARITHM (log)", desc: "Base 10 log", keys: ["l","o","g","("] },
+  "ln":   { action: "NATURAL LOG (ln)", desc: "Base e log", keys: ["l","n","("] },
+  "abs":  { action: "ABS VALUE (|x|)", desc: "Absolute value bars", keys: ["a","b","s","("] },
+  "mean": { action: "AVERAGE (mean)", desc: "List mean hack", keys: ["m","e","a","n","("] },
+  "stdev":{ action: "STD DEV (stdev)", desc: "Standard deviation", keys: ["s","t","d","e","v","("] }
+};
 
-function renderKbdBadge(keyStr, isLargeDirect) {
+function renderKbdBadge(keyStr, type) {
   var isShift = keyStr.toLowerCase() === "shift";
-  var cls = "keycap" + (isShift ? " shift" : (isLargeDirect ? " direct" : ""));
+  var cls = "keycap" + (isShift ? " shift" : (type === "direct" ? " direct" : (type === "nav" ? " nav" : "")));
   return '<kbd class="' + cls + '">' + escapeHtml(keyStr) + '</kbd>';
 }
 
-function renderKeyComboHtml(info, ch) {
-  if (!info) {
-    return renderKbdBadge(ch, true);
-  }
+function renderKeyComboHtml(info, fallbackCh) {
+  if (!info) return renderKbdBadge(fallbackCh, "direct");
+  if (info.navKey) return renderKbdBadge(info.navKey, "nav");
   if (info.sequence) {
-    return '<span class="key-combo-group">' + info.sequence.map(function(seq) {
-      return seq.map(function(k){ return renderKbdBadge(k, false); }).join(' <span class="key-plus">+</span> ');
-    }).join(' <span style="font-size:11px;color:var(--text-faint);">then</span> ') + '</span>';
+    return info.sequence.map(function(seq) {
+      return seq.map(function(k){ return renderKbdBadge(k, "combo"); }).join(' <span class="key-plus">+</span> ');
+    }).join(' <span style="font-size:11px;color:var(--text-faint);">then</span> ');
   }
   if (info.keys) {
-    return '<span class="key-combo-group">' + info.keys.map(function(k){ return renderKbdBadge(k, false); }).join(' <span class="key-plus">+</span> ') + '</span>';
+    return info.keys.map(function(k){ return renderKbdBadge(k, "combo"); }).join(' <span class="key-plus">+</span> ');
   }
-  return renderKbdBadge(ch, true);
+  return renderKbdBadge(fallbackCh, "direct");
 }
 
-function classifyToken(t){
-  if (FN_NAMES.indexOf(t) !== -1) return { kind:"fn", combo: renderKbdBadge(t, false) };
-  if (/^\d+$/.test(t) || /^[A-Za-z]$/.test(t)) return { kind:"char", combo: renderKbdBadge(t, true) };
-  if (KEY_LABELS[t]) return { kind:"key", combo: renderKeyComboHtml(KEY_LABELS[t], t) };
-  return { kind:"other", combo: renderKbdBadge(t, true) };
-}
-
-function tokenizeAnswer(str){
+function tokenizeAnswerWithNav(str, catId){
   var re = /sqrt|sin|cos|tan|log|ln|abs|mean|stdev|ncr|<=|>=|\d+|[A-Za-z]|./g;
-  var m, tokens = [];
+  var m, rawTokens = [];
   while ((m = re.exec(str))){
-    tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
+    rawTokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
+  }
+
+  // Insert explicit navigation arrow steps (→) where Desmos requires stepping out of boxes
+  var tokens = [];
+  for (var i = 0; i < rawTokens.length; i++) {
+    var cur = rawTokens[i];
+    tokens.push(cur);
+
+    var next = rawTokens[i+1];
+    if (next) {
+      // Check if current token was inside exponent (^) or root (sqrt) or fraction denominator (/) and next token returns to baseline
+      var isAfterExponentNumber = cur.text === "100" || (cur.text === "2" && i > 0 && rawTokens[i-1].text === "^");
+      var isNextOperator = (next.text === "+" || next.text === "-" || next.text === "=");
+      
+      // If we just typed an exponent like x^100 or x^2 or sqrt(x) and next is +5, Desmos requires →
+      if ((cur.text === "100" || cur.text === "2" || cur.text === "y") && isNextOperator && str.includes("^")) {
+        // Only insert if exponent was opened before
+        var hasPowBefore = false;
+        for (var k = i; k >= 0; k--) { if (rawTokens[k].text === "^") { hasPowBefore = true; break; } }
+        if (hasPowBefore) {
+          tokens.push({ text: "→", isNav: true, start: cur.end, end: cur.end });
+        }
+      }
+    }
   }
   return tokens;
 }
 
-function renderBreakdown(answer){
-  var tokens = tokenizeAnswer(answer);
+function renderBreakdown(answer, catId){
+  var tokens = tokenizeAnswerWithNav(answer, catId);
   var chips = tokens.map(function(tok){
-    var info = classifyToken(tok.text);
-    return '<div class="tok tok-' + info.kind + '" data-start="' + tok.start + '" data-end="' + tok.end + '">' +
-      info.combo +
+    var actionName = "";
+    var actionCls = "";
+    var comboHtml = "";
+
+    if (tok.isNav || tok.text === "→") {
+      actionName = "EXIT BOX (→)";
+      actionCls = "nav-action";
+      comboHtml = renderKbdBadge("→", "nav");
+    } else if (FN_ACTIONS[tok.text]) {
+      var fnInfo = FN_ACTIONS[tok.text];
+      actionName = fnInfo.action;
+      comboHtml = renderKeyComboHtml(fnInfo, tok.text);
+    } else if (DESMOS_ACTIONS[tok.text]) {
+      var actInfo = DESMOS_ACTIONS[tok.text];
+      actionName = actInfo.action;
+      comboHtml = renderKeyComboHtml(actInfo, tok.text);
+    } else if (/^\d+$/.test(tok.text)) {
+      actionName = "NUMBER";
+      actionCls = "term-action";
+      comboHtml = renderKbdBadge(tok.text, "direct");
+    } else if (/^[A-Za-z]$/.text(tok.text)) {
+      actionName = "VARIABLE";
+      actionCls = "term-action";
+      comboHtml = renderKbdBadge(tok.text, "direct");
+    } else {
+      actionName = "SYMBOL";
+      actionCls = "term-action";
+      comboHtml = renderKbdBadge(tok.text, "direct");
+    }
+
+    return '<div class="tok" data-start="' + tok.start + '" data-end="' + tok.end + '">' +
+      '<div class="tok-action-name ' + actionCls + '">' + escapeHtml(actionName) + '</div>' +
+      '<div class="tok-kbd-row">' + comboHtml + '</div>' +
     '</div>';
   }).join('<div class="tok-arrow">›</div>');
   return chips;
 }
 
 var CATEGORY_KEYS = {
-  exp:           ["^","(",")","-"],
-  roots:         ["(",")","-"],
-  frac:          ["/","(",")","-"],
-  trig:          ["(",")","_","^"],
+  exp:           ["^","(",")","-","→"],
+  roots:         ["(",")","-","→"],
+  frac:          ["/","(",")","-","→"],
+  trig:          ["(",")","_","^","→"],
   piecewise:     ["{","}",":","<",">","-"],
   ineq_abs:      ["(",")","<",">","<=",">=","=","-"],
-  combined:      ["^","(",")","/","_","{","}","<",">","=","-"],
+  combined:      ["^","(",")","/","_","{","}","<",">","=","-","→"],
 
   sat_linear:    ["=","+","-","/","_","~","{","}"],
   sat_quadratics:["^","=","+","-","(",")","_","~"],
@@ -1180,11 +1268,12 @@ var CATEGORY_KEYS = {
 function renderKeyLegend(catId){
   var chars = CATEGORY_KEYS[catId] || [];
   var chips = chars.map(function(ch){
-    var info = KEY_LABELS[ch];
-    var comboHtml = info ? renderKeyComboHtml(info, ch) : renderKbdBadge(ch, true);
-    return '<span class="legend-chip"><b>' + escapeHtml(ch) + '</b>' + (comboHtml ? '<i>' + comboHtml + '</i>' : '') + '</span>';
+    var info = DESMOS_ACTIONS[ch];
+    var comboHtml = info ? renderKeyComboHtml(info, ch) : renderKbdBadge(ch, "direct");
+    var name = info ? info.action : ch;
+    return '<span class="legend-chip"><b>' + escapeHtml(ch) + '</b><i><span style="font-weight:700;color:var(--text);margin-right:4px;">' + escapeHtml(name) + ':</span>' + comboHtml + '</i></span>';
   }).join("");
-  return '<div class="key-legend"><span class="key-legend-title">KEYBOARD SHORTCUTS & SHIFT KEYS</span>' + chips + '</div>';
+  return '<div class="key-legend"><span class="key-legend-title">DESMOS CALCULATOR COMMANDS & SHORTCUTS</span>' + chips + '</div>';
 }
 
 /* ============================== STATE & LOCALSTORAGE PERSISTENCE ============================== */
@@ -1636,7 +1725,7 @@ function renderSessionScreen(){
     : '<div class="timer-wrap"><div class="timer-row"><span>Learn — untimed keystroke drill</span><span>&nbsp;</span></div></div>';
 
   var answerHtml = s.phase === "learn"
-    ? '<div class="breakdown" id="breakdown">' + renderBreakdown(item.answer) + '</div>'
+    ? '<div class="breakdown" id="breakdown">' + renderBreakdown(item.answer, s.catId) + '</div>'
     : '<div class="answer-shown" id="answerReveal" style="display:none">' + escapeHtml(item.answer) + "</div>";
 
   var noteHtml = item.note
