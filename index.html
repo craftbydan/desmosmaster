@@ -1302,7 +1302,6 @@ function isMatch(input, item){
 /* ============================== GLOBAL DISPATCH ACTION ============================== */
 
 window.dispatchAction = function(action, el, event) {
-  if (event && event.stopPropagation) event.stopPropagation();
   
   if (action === "start-category" || action === "retry-phase") {
     var catId = el ? el.getAttribute("data-cat") : null;
@@ -1565,7 +1564,7 @@ function nextCard(){
   if (s.index >= s.queue.length){
     finishSession();
   } else {
-    mountCard();
+    renderRoot();
   }
 }
 
@@ -1654,7 +1653,7 @@ function renderHome(){
         : (prog.lastAccuracy != null ? prog.lastAccuracy + "% accuracy last round" : "unattempted");
 
     return (
-      '<div class="cat-card' + (prog.mastered ? " is-mastered" : "") + '" role="button" tabindex="0" data-part="' + part + '" data-action="start-category" data-cat="' + catId + '" onclick="window.dispatchAction(\'start-category\', this, event)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();window.dispatchAction(\'start-category\', this, event);}">' +
+      '<div class="cat-card' + (prog.mastered ? " is-mastered" : "") + '" role="button" tabindex="0" data-part="' + part + '" data-action="start-category" data-cat="' + catId + '">' +
         '<div class="cat-top">' +
           '<div class="cat-name">' + escapeHtml(meta.label) + '</div>' +
           '<div class="phase-pill ' + phaseClass(prog.phase, prog.mastered) + '">' + phaseLabel(prog.phase, prog.mastered) + '</div>' +
@@ -1675,16 +1674,16 @@ function renderHome(){
         '<span class="brand-sub">keystroke recall & SAT math trainer</span>' +
       '</div>' +
       '<div class="topbar-actions">' +
-        '<button class="icon-btn" type="button" data-action="toggle-pace" onclick="window.dispatchAction(\'toggle-pace\', this, event)" title="Adjust dynamic timing pace">' + escapeHtml(paceLabel) + '</button>' +
-        '<button class="icon-btn" type="button" data-action="toggle-theme" onclick="window.dispatchAction(\'toggle-theme\', this, event)">🌓 Theme</button>' +
+        '<button class="icon-btn" type="button" data-action="toggle-pace" title="Adjust dynamic timing pace">' + escapeHtml(paceLabel) + '</button>' +
+        '<button class="icon-btn" type="button" data-action="toggle-theme">🌓 Theme</button>' +
       '</div>' +
     '</div>' +
 
     '<div class="part-switcher">' +
-      '<button class="part-tab ' + (part === "master" ? "active" : "") + '" data-part="master" data-action="switch-part" onclick="window.dispatchAction(\'switch-part\', this, event)" type="button">' +
+      '<button class="part-tab ' + (part === "master" ? "active" : "") + '" data-part="master" data-action="switch-part" type="button">' +
         '<span>Desmos Master</span><span class="badge">Syntax & Speed</span>' +
       '</button>' +
-      '<button class="part-tab ' + (part === "sat" ? "active" : "") + '" data-part="sat" data-action="switch-part" onclick="window.dispatchAction(\'switch-part\', this, event)" type="button">' +
+      '<button class="part-tab ' + (part === "sat" ? "active" : "") + '" data-part="sat" data-action="switch-part" type="button">' +
         '<span>SAT Math Desmos</span><span class="badge">SAT Hacks & Prep</span>' +
       '</button>' +
     '</div>' +
@@ -1739,13 +1738,13 @@ function renderSessionScreen(){
   var legendHtml = renderKeyLegend(s.catId);
 
   var revealBtn = s.phase !== "learn"
-    ? '<button type="button" class="btn btn-reveal" data-action="reveal" onclick="window.dispatchAction(\'reveal\', this, event)">Reveal (Space)</button>'
+    ? '<button type="button" class="btn btn-reveal" data-action="reveal">Reveal (Space)</button>'
     : "";
 
   var html =
     '<div class="session">' +
       '<div class="session-head">' +
-        '<div class="session-cat"><button class="session-back" data-action="back-home" onclick="window.dispatchAction(\'back-home\', this, event)" type="button">← Categories</button><span>&nbsp;/&nbsp;' + escapeHtml(meta.label) + '</span></div>' +
+        '<div class="session-cat"><button class="session-back" data-action="back-home" type="button">← Categories</button><span>&nbsp;/&nbsp;' + escapeHtml(meta.label) + '</span></div>' +
         streakHtml +
       '</div>' +
       '<div class="progress-dots">' + dots + '</div>' +
@@ -1810,9 +1809,9 @@ function renderSummary(){
       '<div class="summary-sub">' + escapeHtml(sum.message) + '</div>' +
       statsHtml +
       '<div class="summary-actions">' +
-        '<button class="btn" data-action="back-home" onclick="window.dispatchAction(\'back-home\', this, event)" type="button">All Categories</button>' +
-        '<button class="btn" data-action="retry-phase" data-cat="' + sum.catId + '" onclick="window.dispatchAction(\'retry-phase\', this, event)" type="button">' + retryLabel + '</button>' +
-        (sum.advanced ? '<button class="btn btn-primary" data-action="start-category" data-cat="' + sum.catId + '" onclick="window.dispatchAction(\'start-category\', this, event)" type="button">Next Phase →</button>' : '') +
+        '<button class="btn" data-action="back-home" type="button">All Categories</button>' +
+        '<button class="btn" data-action="retry-phase" data-cat="' + sum.catId + '" type="button">' + retryLabel + '</button>' +
+        (sum.advanced ? '<button class="btn btn-primary" data-action="start-category" data-cat="' + sum.catId + '" type="button">Next Phase →</button>' : '') +
       '</div>' +
     '</div>';
 
